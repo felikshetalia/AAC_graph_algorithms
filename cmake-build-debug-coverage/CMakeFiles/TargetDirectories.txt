@@ -1,0 +1,3 @@
+C:/Users/osmns/CLionProjects/AAC_graph_algorithms/cmake-build-debug-coverage/CMakeFiles/AAC_graph_algorithms.dir
+C:/Users/osmns/CLionProjects/AAC_graph_algorithms/cmake-build-debug-coverage/CMakeFiles/edit_cache.dir
+C:/Users/osmns/CLionProjects/AAC_graph_algorithms/cmake-build-debug-coverage/CMakeFiles/rebuild_cache.dir
