@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "maxClique.h"
 #include "MSC.h"
+#include "bruteMaxClique.h"
+#include <time.h>
 
 //Malloc
 int** allocateMatrix(int rows, int cols) {
@@ -113,6 +115,7 @@ int main() {
 
     switch (choice) {
         case 1: {
+
             const char* filename = "../example graphs/graph1.txt";
             Graph* graph = createGraphFromFile(filename);
             VertexColorPair *colors = greedyVertexColoring(graph);
@@ -130,12 +133,29 @@ int main() {
                 graph->rowIDs[i] = i; // You can use any unique identifier logic
             }
             // Call maxClique function
+            clock_t start = clock();
             maxClique(graph, colors, &Q, &Qmax);
+            clock_t end = clock();
+            double time_spent = ((double)(end - start)) / CLOCKS_PER_SEC;
+            printf("%f",time_spent);
             printf("Number of Cliques %d", Qmax);
             free(colors);
             freeGraph(graph);
         }
-            break;
+        break;
+        case 2:
+        {
+            const char* filename = "../example graphs/graph1.txt";
+            Graph* graph = createGraphFromFile(filename);
+            clock_t start = clock();
+            bruteMaxClique(graph);
+            clock_t end = clock();
+            double time_spent = ((double)(end - start)) / CLOCKS_PER_SEC;
+            printf("%f",time_spent);
+            freeGraph(graph);
+
+        }break;
+
 
         default:
             printf("Invalid choice\n");
