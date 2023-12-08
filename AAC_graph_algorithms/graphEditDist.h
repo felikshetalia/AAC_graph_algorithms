@@ -23,14 +23,14 @@
 // #endif // ADJACENCY_MATRIXES_H
 
 int next_permutation(int *array, int size) {
-    // 順列生成アルゴリズム
+    // algo for generating permutation
     int i = size - 1;
     while (i > 0 && array[i - 1] >= array[i]) {
         i--;
     }
 
     if (i == 0) {
-        return 0;  // 順列の最後に達した場合
+        return 0;  // when we reach the last element of permutation
     }
 
     int j = size - 1;
@@ -38,12 +38,11 @@ int next_permutation(int *array, int size) {
         j--;
     }
 
-    // i-1 と j の要素を交換
     int temp = array[i - 1];
     array[i - 1] = array[j];
     array[j] = temp;
 
-    // i 以降の要素を反転
+    // reverse elements after i
     j = size - 1;
     while (i < j) {
         temp = array[i];
@@ -53,7 +52,7 @@ int next_permutation(int *array, int size) {
         j--;
     }
 
-    return 1;  // 次の順列が存在する場合
+    return 1;  // if next permutation exists
 }
 
 int getNumberOfEdges(const Graph* graph) {
