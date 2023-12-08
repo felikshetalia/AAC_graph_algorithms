@@ -9,3 +9,8 @@ typedef struct Graph {
     int** adjacencyMatrix;
     int* rowIDs;
 } Graph;
+
+typedef struct VertexDegreePair {
+    int vertex;
+    int degree;
+} VertexDegreePair;

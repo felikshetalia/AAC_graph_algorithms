@@ -4,7 +4,8 @@
 #include "MSC.h"
 #include "bruteMaxClique.h"
 #include <time.h>
-
+#include "graphEditDistApproximation.h"
+#include "graphEditDist.h"
 //Malloc
 int** allocateMatrix(int rows, int cols) {
     int** matrix = (int**)malloc(rows * sizeof(int*));
@@ -110,7 +111,7 @@ int main() {
 
     int choice =0;
 
-    printf("Enter a choice 1 for Max Clique with greedy alg\n: ");
+    printf("Enter 1,2 or 3 \n1)GREEDY MAX CLIQUE ALGORITHM \n2)BRUTE FORCE MAX CLIQUE ALGORITHM\n3)METRIC DISTANCE\n ");
     scanf("%d", &choice);
 
     switch (choice) {
@@ -137,8 +138,8 @@ int main() {
             maxClique(graph, colors, &Q, &Qmax);
             clock_t end = clock();
             double time_spent = ((double)(end - start)) / CLOCKS_PER_SEC;
-            printf("%f",time_spent);
-            printf("Number of Cliques %d", Qmax);
+            printf("Time spent: %f\n",time_spent);
+            printf("Number of Vertices in Clique= %d", Qmax);
             free(colors);
             freeGraph(graph);
         }
@@ -151,8 +152,38 @@ int main() {
             bruteMaxClique(graph);
             clock_t end = clock();
             double time_spent = ((double)(end - start)) / CLOCKS_PER_SEC;
-            printf("%f",time_spent);
+            printf("time spent %f\n",time_spent);
             freeGraph(graph);
+
+        }break;
+        case 3:{
+            const char* filename1 = "../example graphs/graph1.txt";
+            const char* filename2 = "../example graphs/graph2.txt";
+            Graph* graph1 = createGraphFromFile(filename1);
+            Graph* graph2 = createGraphFromFile(filename2);
+
+
+            //----- Exact solution -----
+             clock_t start_time1 = clock();
+             int result1 = graphEditDistance(graph1, graph2);
+             clock_t end_time1 = clock();
+             double cpu_time_used1 = ((double) (end_time1 - start_time1)) / CLOCKS_PER_SEC;
+
+            // ----- Polynomial solution -----
+            clock_t start_time2 = clock();
+            int result2 = graphEditDistancePolynomialApproximation(graph1, graph2);
+            clock_t end_time2 = clock();
+            double cpu_time_used2 = ((double) (end_time2 - start_time2)) / CLOCKS_PER_SEC;
+
+             printf("------------ Minumun Edit Distance --------------\n");
+             printf("Exact Solution \n");
+             printf("Minimum edit distance is %d \n", result1);
+
+            printf("Approximation Solution \n");
+            printf("Minimum edit distance is %d \n", result2);
+
+            printf("%f \n", cpu_time_used1);
+            printf(" %f \n", cpu_time_used2);
 
         }break;
 
