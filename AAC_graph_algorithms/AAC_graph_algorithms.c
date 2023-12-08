@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "graphEditDist.h"
+#include "graphEditDistApproximation.h"
+#include "minimumResolvingSet.h"
 #include "maxClique.h"
 //Malloc
 int** allocateMatrix(int rows, int cols) {
@@ -40,7 +42,6 @@ int isSymmetric(int** matrix, int size) {
 
     return 1; // Symmetric (valid)
 }
-
 
 // Function to read graph from file and create the Graph
 Graph* createGraphFromFile(const char* filename) {
@@ -96,8 +97,8 @@ void printAdjacencyMatrix(int** matrix, int length) {
 
 
 int main() {
-    const char* filename = "../example graphs/graph4.txt";
-    const char* filename2 = "../example graphs/graph5.txt";
+    const char* filename = "../example_graphs/graph3.txt";
+    const char* filename2 = "../example_graphs/graph10.txt";
 
     Graph* graph = createGraphFromFile(filename);
     Graph* graph2 = createGraphFromFile(filename2);
@@ -118,9 +119,17 @@ int main() {
 
     //----- Task 1 -----
     // GED (Graph Edit Distance)
-    int result = graphEditDistance(graph, graph2);
-    printf("Minimum edit distance is %d", result);
+    int result1 = graphEditDistance(graph, graph2);
+    int result2 = graphEditDistancePolynomialApproximation(graph, graph2);
+    printf("------------ Minumun Edit Distance --------------\n");
+    printf("Exact Solution \n");
+    printf("Minimum edit distance is %d \n", result1);
+    printf("Approximation Solution \n");
+    printf("Minimum edit distance is %d \n", result2);
+    // Minimum Resolving Set
 
+    printf("------------ Minumun Resolving Set --------------\n");
+    // minimumResolvingSet(graph);
 
     // Call maxClique function
     // maxClique(graph, colors, &Q, &Qmax);

@@ -1,10 +1,11 @@
-#include "adjacencyMatrixces.h"
 #include <stdio.h>
 #include <stdlib.h>  // Include necessary header for malloc, free
 #include <limits.h>  // Include necessary header for INT_MAX
 
 #ifndef GRAPH_EDIT_DIST_H
 #define GRAPH_EDIT_DIST_H
+
+#include "adjacencyMatrixces.h"
 
 // "adjacencyMatrixces.h"
 // #ifndef ADJACENCY_MATRIXES_H
@@ -73,7 +74,6 @@ int getNumberOfEdges(const Graph* graph) {
 }
 
 int graphEditDistance(const Graph* graph1, const Graph* graph2) {
-    // Time complexity: O(V^2 * V!)
 
     int size1 = graph1->vertices;
     int size2 = graph2->vertices;

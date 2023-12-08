@@ -11,4 +11,10 @@ typedef struct Graph {
     int** adjacencyMatrix;
 } Graph;
 
+// for metric distance
+typedef struct VertexDegreePair {
+    int vertex;
+    int degree;
+} VertexDegreePair;
+
 #endif // ADJACENCY_MATRIXES_H
