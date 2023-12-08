@@ -70,7 +70,12 @@ Graph* createGraphFromFile(const char* filename) {
             fscanf(file, "%d", &(graph->adjacencyMatrix[i][j]));
         }
     }
+    graph->rowIDs = (int*)malloc(graph->vertices * sizeof(int));
 
+    // Initialize row IDs with unique values
+    for (int i = 0; i < graph->vertices; ++i) {
+        graph->rowIDs[i] = i + 1; // You can use any unique identifier logic
+    }
     fclose(file);
 
     // Check if the matrix is symmetric

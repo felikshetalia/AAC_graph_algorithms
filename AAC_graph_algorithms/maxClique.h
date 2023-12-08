@@ -1,5 +1,6 @@
 #include "adjacencyMatrixces.h"
 #include <stdio.h>
+#include <string.h>
 
 //TEST FOR PRINTING GRAPH
 void printGraph(const Graph* graph) {
@@ -13,30 +14,25 @@ void printGraph(const Graph* graph) {
     }
 }
 
-void removeRowColumn(Graph* graph, int targetRow, int targetCol) {
-    // Decrease the number of vertices
-    graph->vertices--;
+void removeRowColumn(Graph *graph, int row, int col) {
+    int i, j;
 
-    // Remove the selected row
-    free(graph->adjacencyMatrix[targetRow]);
-
-    // Move data up for the remaining rows
-    for (int row = targetRow; row < graph->vertices; ++row) {
-        graph->adjacencyMatrix[row] = graph->adjacencyMatrix[row + 1];
-    }
-
-    // Resize each remaining row to have the correct number of columns
-    for (int row = 0; row < graph->vertices; ++row) {
-        graph->adjacencyMatrix[row] = realloc(graph->adjacencyMatrix[row], sizeof(int) * graph->vertices);
-    }
-
-    // Move data to the left for the remaining columns
-
-    for (int row = 0; row < graph->vertices; ++row) {
-        for (int col = targetCol; col < graph->vertices; ++col) {
-            graph->adjacencyMatrix[row][col] = graph->adjacencyMatrix[row][col + 1];
+    // Shifting rows to the left
+    for (i = row; i < graph->vertices - 1; ++i) {
+        for (j = 0; j < graph->vertices; ++j) {
+            graph->adjacencyMatrix[i][j] = graph->adjacencyMatrix[i + 1][j];
         }
     }
+
+    // Shifting columns upwards
+    for (j = col; j < graph->vertices - 1; ++j) {
+        for (i = 0; i < graph->vertices; ++i) {
+            graph->adjacencyMatrix[i][j] = graph->adjacencyMatrix[i][j + 1];
+        }
+    }
+
+    // Decreasing the number of vertices after removing a row and a column
+    graph->vertices--;
 }
 VertexColorPair* greedyVertexColoring(const Graph* graph) {
     VertexColorPair* vertexColors = (VertexColorPair*)malloc(graph->vertices * sizeof(VertexColorPair));
@@ -49,6 +45,7 @@ VertexColorPair* greedyVertexColoring(const Graph* graph) {
     for (int i = 0; i < graph->vertices; ++i) {
         vertexColors[i].vertex = i;
         vertexColors[i].color = -1;
+
     }
 
     // Assign colors to vertices
@@ -59,7 +56,7 @@ VertexColorPair* greedyVertexColoring(const Graph* graph) {
             usedColors[i] = 0;
         }
 
-        // Check colors of neighbors and mark them as u sed
+        // Check colors of neighbors and mark them as used
         for (int neighbor = 0; neighbor < graph->vertices; ++neighbor) {
             if (graph->adjacencyMatrix[vertex][neighbor] && vertexColors[neighbor].color != -1) {
                 usedColors[vertexColors[neighbor].color] = 1;
@@ -80,7 +77,8 @@ VertexColorPair* greedyVertexColoring(const Graph* graph) {
 
 void maxClique(Graph* graph, VertexColorPair* colors, int* Q, int* Qmax) {
     int maxVertex = -1;
-
+    int pNoElement = graph->vertices;
+    int* P = (int*)malloc(graph->vertices * sizeof(int));
     while (graph->vertices > 0) {
         int maxColor = -1;
 
@@ -91,17 +89,35 @@ void maxClique(Graph* graph, VertexColorPair* colors, int* Q, int* Qmax) {
                 maxVertex = i;
             }
         }
+        memset(P, 0, graph->vertices * sizeof(int));
+        for(int i=0;i<graph->vertices;++i){
+           P[i] = graph->adjacencyMatrix[maxVertex][i];
 
-        // Remove the selected vertex p from set R
+        }
+
+        // Remove the selected vertex and its non-adjacent vertices from set R
+        for (int i = 0; i < graph->vertices; i++) {
+            if (i != maxVertex && !graph->adjacencyMatrix[maxVertex][i]) {
+                // Remove the vertex i from set R
+                removeRowColumn(graph, i, i);
+                if(i<maxVertex){
+                    maxVertex--;
+
+                }
+                i--;
+            }
+
+        }
+    // Remove the selected vertex from set R
         removeRowColumn(graph, maxVertex, maxVertex);
         printGraph(graph);
 
-        if (*Q + colors[maxVertex].color > *Qmax) {
+        if (*Q + maxColor > *Qmax) {
             *Q = *Q + 1 ;
             // Check if R ? ?(p) ? Ø
             int hasNeighborsInR = 0;
-            for (int i = 0; i < graph->vertices; ++i) {
-                if (graph->adjacencyMatrix[maxVertex][i]) {
+            for (int i = 0; i < pNoElement; ++i) {
+                if (P[i]) {
                     hasNeighborsInR = 1;
                     break;
                 }
@@ -111,21 +127,19 @@ void maxClique(Graph* graph, VertexColorPair* colors, int* Q, int* Qmax) {
                 // Obtain a vertex-coloring C' of G(R ? ?(p))
                 VertexColorPair *newColors = greedyVertexColoring(graph);
                 for (int i = 0; i < graph->vertices; ++i) {
-                    printf("Vertex %d: Color %d\n", colors[i].vertex + 1, colors[i].color);
+                    printf("Vertex %d: Color %d\n", i + 1, newColors[i].color);
                 }
-                // Recursive call with C'
-                maxClique(graph, newColors, &Q, &Qmax);
-
-                // Free the memory for C'
-                free(newColors);
-            } else if (*Q > *Qmax) {
+                maxClique(graph, newColors, Q, Qmax);
+            }
+            else if (*Q > *Qmax) {
                 *Qmax = *Q;
                 *Q = *Q -1;
+            }
 
-            }
-            else {
-                return;
-            }
+        }
+        else {
+            return;
         }
     }
+
 }
