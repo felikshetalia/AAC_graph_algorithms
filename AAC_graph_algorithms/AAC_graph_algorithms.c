@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "graphEditDist.h"
 #include "maxClique.h"
 //Malloc
 int** allocateMatrix(int rows, int cols) {
@@ -39,7 +40,6 @@ int isSymmetric(int** matrix, int size) {
 
     return 1; // Symmetric (valid)
 }
-
 
 
 // Function to read graph from file and create the Graph
@@ -96,10 +96,14 @@ void printAdjacencyMatrix(int** matrix, int length) {
 
 
 int main() {
-    const char* filename = "../example graphs/graph1.txt";
+    const char* filename = "../example graphs/graph4.txt";
+    const char* filename2 = "../example graphs/graph5.txt";
 
     Graph* graph = createGraphFromFile(filename);
+    Graph* graph2 = createGraphFromFile(filename2);
+
     VertexColorPair *colors = greedyVertexColoring(graph);
+
     int Q =0;
     int Qmax = 0;
     // Print the obtained vertex colors
@@ -109,9 +113,18 @@ int main() {
         printf("Vertex %d: Color %d\n", colors[i].vertex+1, colors[i].color);
     }
 
+    printGraph(graph2);
+    printf("Vertex Colors:\n");
+
+    //----- Task 1 -----
+    // GED (Graph Edit Distance)
+    int result = graphEditDistance(graph, graph2);
+    printf("Minimum edit distance is %d", result);
+
+
     // Call maxClique function
-    maxClique(graph, colors, &Q, &Qmax);
-    printf("Number of Cliques %d",Qmax);
+    // maxClique(graph, colors, &Q, &Qmax);
+    // printf("Number of Cliques %d",Qmax);
 
     free(colors);
     freeGraph(graph);
