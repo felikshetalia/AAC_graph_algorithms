@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "maxClique.h"
+#include "MSC.h"
+
 //Malloc
 int** allocateMatrix(int rows, int cols) {
     int** matrix = (int**)malloc(rows * sizeof(int*));
@@ -16,10 +18,12 @@ void freeMatrix(int** matrix, int rows) {
         free(matrix[i]);
     }
     free(matrix);
+
 }
 
 void freeGraph(Graph* graph) {
     freeMatrix(graph->adjacencyMatrix, graph->vertices);
+    free(graph->rowIDs);
     free(graph);
 }
 
@@ -101,24 +105,51 @@ void printAdjacencyMatrix(int** matrix, int length) {
 
 
 int main() {
-    const char* filename = "../example graphs/graph1.txt";
 
-    Graph* graph = createGraphFromFile(filename);
-    VertexColorPair *colors = greedyVertexColoring(graph);
-    int Q =0;
-    int Qmax = 0;
-    // Print the obtained vertex colors
-    printGraph(graph);
-    printf("Vertex Colors:\n");
-    for (int i = 0; i < graph->vertices; ++i) {
-        printf("Vertex %d: Color %d\n", colors[i].vertex+1, colors[i].color);
+    int choice =0;
+
+    printf("Enter a choice 1 for Max Clique with greedy alg\n: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1: {
+            const char* filename = "../example graphs/graph1.txt";
+            Graph* graph = createGraphFromFile(filename);
+            VertexColorPair *colors = greedyVertexColoring(graph);
+            int Q = 0;
+            int Qmax = 0;
+            // Print the obtained vertex colors
+            printGraph(graph);
+            printf("Vertex Colors:\n");
+            for (int i = 0; i < graph->vertices; ++i) {
+                printf("Vertex %d: Color %d\n", colors[i].vertex + 1, colors[i].color);
+            }
+
+            graph->rowIDs = (int *) malloc(graph->vertices * sizeof(int));
+            for (int i = 0; i < graph->vertices; ++i) {
+                graph->rowIDs[i] = i; // You can use any unique identifier logic
+            }
+            // Call maxClique function
+            maxClique(graph, colors, &Q, &Qmax);
+            printf("Number of Cliques %d", Qmax);
+            free(colors);
+            freeGraph(graph);
+        }
+            break;
+
+        default:
+            printf("Invalid choice\n");
     }
 
-    // Call maxClique function
-    maxClique(graph, colors, &Q, &Qmax);
-    printf("Number of Cliques %d",Qmax);
 
-    free(colors);
-    freeGraph(graph);
+
+//    printf("Vertices in Maximum Clique: ");
+//    for (int i = 0; i < Qmax; ++i) {
+//        printf("%d ", &cliqueVertices[i] + 1); // Adding 1 to convert from 0-based to 1-based index
+//    }
+
+
+
+   // free(cliqueVertices);
     return 0;
 }

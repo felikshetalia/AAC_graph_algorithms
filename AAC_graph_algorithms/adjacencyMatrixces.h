@@ -1,5 +1,5 @@
-typedef struct VertexColorPair {
 
+typedef struct VertexColorPair {
     int vertex;
     int color;
 } VertexColorPair;
