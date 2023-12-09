@@ -6,6 +6,18 @@
 #include <time.h>
 #include "graphEditDistApproximation.h"
 #include "graphEditDist.h"
+#include <conio.h>
+
+const char* filename1 = "../example graphs/graph1.txt";
+const char* filename2 = "../example graphs/graph2.txt";
+const char* filename3 = "../example graphs/graph3.txt";
+const char* filename4 = "../example graphs/graph4.txt";
+const char* filename5 = "../example graphs/graph5.txt";
+const char* filename6 = "../example graphs/graph6.txt";
+const char* filename7 = "../example graphs/graph7.txt";
+
+
+
 //Malloc
 int** allocateMatrix(int rows, int cols) {
     int** matrix = (int**)malloc(rows * sizeof(int*));
@@ -109,16 +121,17 @@ void printAdjacencyMatrix(int** matrix, int length) {
 
 int main() {
 
-    int choice =0;
+    int choice = 0;
 
     printf("Enter 1,2 or 3 \n1)GREEDY MAX CLIQUE ALGORITHM \n2)BRUTE FORCE MAX CLIQUE ALGORITHM\n3)METRIC DISTANCE\n ");
     scanf("%d", &choice);
 
+
     switch (choice) {
         case 1: {
 
-            const char* filename = "../example graphs/graph1.txt";
-            Graph* graph = createGraphFromFile(filename);
+            const char *filename = "../example graphs/graph1.txt";
+            Graph *graph = createGraphFromFile(filename1);
             VertexColorPair *colors = greedyVertexColoring(graph);
             int Q = 0;
             int Qmax = 0;
@@ -137,37 +150,37 @@ int main() {
             clock_t start = clock();
             maxClique(graph, colors, &Q, &Qmax);
             clock_t end = clock();
-            double time_spent = ((double)(end - start)) / CLOCKS_PER_SEC;
-            printf("Time spent: %f\n",time_spent);
+            double time_spent = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("Time spent: %f\n", time_spent);
             printf("Number of Vertices in Clique= %d", Qmax);
             free(colors);
             freeGraph(graph);
+            break;
         }
-        break;
-        case 2:
-        {
-            const char* filename = "../example graphs/graph1.txt";
-            Graph* graph = createGraphFromFile(filename);
+
+        case 2: {
+
+            Graph *graph = createGraphFromFile(filename1);
             clock_t start = clock();
             bruteMaxClique(graph);
             clock_t end = clock();
-            double time_spent = ((double)(end - start)) / CLOCKS_PER_SEC;
-            printf("time spent %f\n",time_spent);
+            double time_spent = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("time spent %f\n", time_spent);
             freeGraph(graph);
+            break;
+        }
 
-        }break;
-        case 3:{
-            const char* filename1 = "../example graphs/graph1.txt";
-            const char* filename2 = "../example graphs/graph2.txt";
-            Graph* graph1 = createGraphFromFile(filename1);
-            Graph* graph2 = createGraphFromFile(filename2);
+        case 3: {
+
+            Graph *graph1 = createGraphFromFile(filename1);
+            Graph *graph2 = createGraphFromFile(filename2);
 
 
             //----- Exact solution -----
-             clock_t start_time1 = clock();
-             int result1 = graphEditDistance(graph1, graph2);
-             clock_t end_time1 = clock();
-             double cpu_time_used1 = ((double) (end_time1 - start_time1)) / CLOCKS_PER_SEC;
+            clock_t start_time1 = clock();
+            int result1 = graphEditDistance(graph1, graph2);
+            clock_t end_time1 = clock();
+            double cpu_time_used1 = ((double) (end_time1 - start_time1)) / CLOCKS_PER_SEC;
 
             // ----- Polynomial solution -----
             clock_t start_time2 = clock();
@@ -175,18 +188,17 @@ int main() {
             clock_t end_time2 = clock();
             double cpu_time_used2 = ((double) (end_time2 - start_time2)) / CLOCKS_PER_SEC;
 
-             printf("------------ Minumun Edit Distance --------------\n");
-             printf("Exact Solution \n");
-             printf("Minimum edit distance is %d \n", result1);
+            printf("------------ Minumun Edit Distance --------------\n");
+            printf("Exact Solution \n");
+            printf("Minimum edit distance is %d \n", result1);
 
             printf("Approximation Solution \n");
             printf("Minimum edit distance is %d \n", result2);
 
             printf("%f \n", cpu_time_used1);
             printf(" %f \n", cpu_time_used2);
-
-        }break;
-
+            break;
+        }
 
         default:
             printf("Invalid choice\n");
@@ -202,5 +214,6 @@ int main() {
 
 
    // free(cliqueVertices);
+   getch();
     return 0;
 }

@@ -1,5 +1,7 @@
 #include <stdbool.h>
 #define MAX_VERTICES 500
+#ifndef bruteMaxCliquE
+#define bruteMaxCliqE
 bool isClique(int vertex, int* clique, int size, Graph* graph) {
     for (int i = 0; i < size; ++i) {
         if (!graph->adjacencyMatrix[vertex][clique[i]]) {
@@ -36,3 +38,4 @@ void bruteMaxClique(Graph* graph) {
     printf("Maximum Clique Size: %d\n", maxSize);
     printf("\n");
 }
+#endif
