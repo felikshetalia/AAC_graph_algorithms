@@ -6,7 +6,9 @@
 #include <time.h>
 #include "graphEditDistApproximation.h"
 #include "graphEditDist.h"
-#include <conio.h>
+#include "metric.h"
+#include "adjacencyMatrixces.h"
+// #include <conio.h>
 
 const char* filename = "../example graphs/graphs.txt";
 int NumberOfGraph;
@@ -119,8 +121,6 @@ Graph** createGraphFromFile(const char* filename) {
 
 
 
-
-
     // Check if the matrix is symmetric
     for(int i=0; i<numGraphs;i++) {
         if (!isSymmetric(graphs[i]->adjacencyMatrix, graphs[i]->vertices)) {
@@ -159,13 +159,8 @@ int main() {
 //        printAdjacencyMatrix(graphs[i]->adjacencyMatrix,graphs[i]->vertices);
 //    }
 
-
-
-
-
-
         printf("\n");
-        printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)METRIC DISTANCE\n999)EXIT\n ");
+        printf("Enter 1 , 2 or 3  \n1)CLIQUE ALGORITHMS \n2)EDIT DISTANCE \n3)METRIC SPACE 999)EXIT\n ");
 
         scanf("%d", &choice);
 
@@ -259,15 +254,40 @@ int main() {
 
             break;
         }
+        case 4: {
+          printf("Choose 1 graph\n");
+          scanf("%d", &graph_choice);
+          graph_choice -= 1;
+          tempGraph = graphs[graph_choice];
 
+          printf("------------ Find Metric Space --------------\n");
+
+          // Find the minimum resolving set
+          ResolvingSet resolvingSet = findMinResolvingSet(tempGraph);
+
+          if (resolvingSet.size == 0) {
+              printf("No Found Metric Space\n");
+          } else {
+              printf("Metric Space including the following vertices: ");
+              for (int i = 0; i < resolvingSet.size - 1; ++i) {
+                  printf("%d, ", resolvingSet.set[i]);
+              }
+              printf("%d\n", resolvingSet.set[resolvingSet.size - 1]);
+          }
+
+          // Free the memory allocated for the resolving set
+          freeResolvingSet(&resolvingSet);
+
+          break;
+
+
+        }
 
         default:
             printf("Invalid choice\n");
 
     }
 
-
-
-    getch();
+    getchar();
     return EXIT_SUCCESS;
 }
