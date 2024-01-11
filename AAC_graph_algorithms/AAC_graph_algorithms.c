@@ -9,7 +9,7 @@
 #include <conio.h>
 
 const char* filename = "../example graphs/graphs.txt";
-int NumberOfGraph;
+static int NumberOfGraph;
 
 //Malloc
 int** allocateMatrix(int**graph,int ver) {
@@ -181,16 +181,19 @@ int main() {
             scanf("%d", &graph_choice);
             graph_choice -= 1;
             tempGraph = graphs[graph_choice];
-            if(graph_choice == 6)
+            printf("GRAPH WITH SIZE %d");
+            printGraph(tempGraph);
+            if(graph_choice == 7)
                 printf("Brute force algorithm find the maximum clique in around 5 minutes for choosen graph due to its size");
             clock_t start1 = clock();
                 bruteMaxClique(tempGraph);
             clock_t end1 = clock();
             double time_spent1 = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
             printf("Time spent for Exponential Algorithm %f\n\n", time_spent1);
-            VertexColorPair *colors = greedyVertexColoring(tempGraph);
             int Q = 0;
             int Qmax = 0;
+
+
             // Print the obtained vertex colors
             //printGraph(tempGraph);
 //            printf("Vertex Colors:\n");
@@ -198,16 +201,16 @@ int main() {
 //                printf("Vertex %d: Color %d\n", colors[i].vertex + 1, colors[i].color);
 //            }
 
-            tempGraph->rowIDs = (int *) malloc(tempGraph->vertices * sizeof(int));
-            for (int i = 0; i < tempGraph->vertices; ++i) {
-                tempGraph->rowIDs[i] = i; // You can use any unique identifier logic
-            }
+//            tempGraph->rowIDs = (int *) malloc(tempGraph->vertices * sizeof(int));
+//            for (int i = 0; i < te1mpGraph->vertices; ++i) {
+//                tempGraph->rowIDs[i] = i; // You can use any unique identifier logic
+//            }
             // Call maxClique function
             clock_t start = clock();
-            ;
+            VertexColorPair *colors = greedyVertexColoring(tempGraph);
             maxClique(tempGraph, colors, &Q, &Qmax);
             clock_t end = clock();
-            double time_spent = ((double) (end - start)) / CLOCKS_PER_SEC;
+            float time_spent = ((float) (end - start)) / CLOCKS_PER_SEC;
             printf("Maximum Clique Size in Polynomial Algorithm= %d\n", Qmax);
             printf("Time spent for Polynomial Algorithm: %f", time_spent);
 
