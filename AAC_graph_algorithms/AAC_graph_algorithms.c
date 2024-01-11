@@ -8,21 +8,14 @@
 #include "graphEditDist.h"
 #include <conio.h>
 
-const char* filename1 = "../example graphs/graph1.txt";
-const char* filename2 = "../example graphs/graph2.txt";
-const char* filename3 = "../example graphs/graph3.txt";
-const char* filename4 = "../example graphs/graph4.txt";
-const char* filename5 = "../example graphs/graph5.txt";
-const char* filename6 = "../example graphs/graph6.txt";
-const char* filename7 = "../example graphs/graph7.txt";
-
-
+const char* filename = "../example graphs/graphs.txt";
+int NumberOfGraph;
 
 //Malloc
-int** allocateMatrix(int rows, int cols) {
-    int** matrix = (int**)malloc(rows * sizeof(int*));
-    for (int i = 0; i < rows; ++i) {
-        matrix[i] = (int*)malloc(cols * sizeof(int));
+int** allocateMatrix(int**graph,int ver) {
+    int** matrix = (int**)malloc(ver * sizeof(int*));
+    for (int i = 0; i < ver; ++i) {
+        matrix[i] = (int*)malloc(ver * sizeof(int));
     }
     return matrix;
 }
@@ -62,48 +55,82 @@ int isSymmetric(int** matrix, int size) {
 
 
 // Function to read graph from file and create the Graph
-Graph* createGraphFromFile(const char* filename) {
+Graph** createGraphFromFile(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         fprintf(stderr, "Error opening file %s\n", filename);
         exit(EXIT_FAILURE);
     }
 
-    // Read the number of vertices
+    // Read the number of graphs
     int vertices;
-    fscanf(file, "%d", &vertices);
-
+    int numGraphs;
+    fscanf(file, "%d", &numGraphs);
+    NumberOfGraph = numGraphs;
     //Apply malloc
-    Graph* graph = (Graph*)malloc(sizeof(Graph));
-    if (graph == NULL) {
+    Graph** graphs = (Graph**)malloc(numGraphs*sizeof(Graph*));
+    if (graphs == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
 
-    graph->vertices = vertices;
-    graph->adjacencyMatrix = allocateMatrix(vertices, vertices);
+    for (int graph = 0; graph < numGraphs; ++graph) {
 
-    // Read the adjacency matrix
-    for (int i = 0; i < vertices; ++i) {
-        for (int j = 0; j < vertices; ++j) {
-            fscanf(file, "%d", &(graph->adjacencyMatrix[i][j]));
+        graphs[graph] = (Graph*)malloc(sizeof(Graph));
+        if (graphs[graph] == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            exit(EXIT_FAILURE);
         }
-    }
-    graph->rowIDs = (int*)malloc(graph->vertices * sizeof(int));
 
-    // Initialize row IDs with unique values
-    for (int i = 0; i < graph->vertices; ++i) {
-        graph->rowIDs[i] = i + 1; // You can use any unique identifier logic
+        fscanf(file, "%d", &vertices);
+        graphs[graph]->adjacencyMatrix = (int**)malloc(vertices * sizeof(int*));
+
+        for (int i = 0; i < vertices; i++) {
+            graphs[graph]->adjacencyMatrix[i] = (int*)malloc(vertices * sizeof(int));
+        }
+        // Read adjacency matrix
+        for (int i = 0; i < vertices; ++i) {
+            for (int j = 0; j < vertices; ++j) {
+                fscanf(file, "%d", &graphs[graph]->adjacencyMatrix[i][j]);
+            }
+        }
+
+        graphs[graph]->vertices = vertices;
+        // Read and discard empty line
+        char buffer[256];
+        fgets(buffer, sizeof(buffer), file);
+        // Initialize row IDs with unique values
+
+        // Initialize row IDs with unique values
+        graphs[graph]->rowIDs = (int*)malloc(vertices * sizeof(int));
+        if (graphs[graph]->rowIDs == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            exit(EXIT_FAILURE);
+        }
+
+        for (int i = 0; i < graphs[graph]->vertices; ++i) {
+            graphs[graph]->rowIDs[i] = i + 1; // You can use any unique identifier logic
+        }
+
     }
+
+
     fclose(file);
 
+
+
+
+
     // Check if the matrix is symmetric
-    if (!isSymmetric(graph->adjacencyMatrix, vertices)) {
-        fprintf(stderr, "Error: The adjacency matrix is not symmetric or contains 1 on diagonal. Not a valid graph.\n");
-        freeGraph(graph);
-        exit(EXIT_FAILURE);
+    for(int i=0; i<numGraphs;i++) {
+        if (!isSymmetric(graphs[i]->adjacencyMatrix, graphs[i]->vertices)) {
+            fprintf(stderr,
+                    "Error: The adjacency matrix %d is not symmetric or contains 1 on diagonal. Not a valid graph.\n",i+1);
+            freeGraph(graphs[i]);
+            exit(EXIT_FAILURE);
+        }
     }
-    return graph;
+    return graphs;
 }
 
 
@@ -119,72 +146,104 @@ void printAdjacencyMatrix(int** matrix, int length) {
 }
 
 
+
 int main() {
-
+    int cond = 1;
     int choice = 0;
+    int graph_choice = 0;
+    Graph *tempGraph;
+    Graph *tempGraph1;
+    Graph **graphs = createGraphFromFile(filename);
+    printf("The Graphs are successfully read");
+//    for(int i=0;i<NumberOfGraph;i++) {
+//        printAdjacencyMatrix(graphs[i]->adjacencyMatrix,graphs[i]->vertices);
+//    }
 
-    printf("Enter 1,2 or 3 \n1)GREEDY MAX CLIQUE ALGORITHM \n2)BRUTE FORCE MAX CLIQUE ALGORITHM\n3)METRIC DISTANCE\n ");
-    scanf("%d", &choice);
 
 
+
+
+
+        printf("\n");
+        printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)METRIC DISTANCE\n999)EXIT\n ");
+
+        scanf("%d", &choice);
+
+        printf("Choose the graph you would like to test:\n");
+        for (int i = 0; i < NumberOfGraph; i++) {
+            printf("%d) The graph with %d vertices\n", i + 1, graphs[i]->vertices);
+        }
+
+
+    printf("\n");
     switch (choice) {
         case 1: {
-
-            const char *filename = "../example graphs/graph1.txt";
-            Graph *graph = createGraphFromFile(filename1);
-            VertexColorPair *colors = greedyVertexColoring(graph);
+            scanf("%d", &graph_choice);
+            graph_choice -= 1;
+            tempGraph = graphs[graph_choice];
+            if(graph_choice == 6)
+                printf("Brute force algorithm find the maximum clique in around 5 minutes for choosen graph due to its size");
+            clock_t start1 = clock();
+                bruteMaxClique(tempGraph);
+            clock_t end1 = clock();
+            double time_spent1 = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
+            printf("Time spent for Exponential Algorithm %f\n\n", time_spent1);
+            VertexColorPair *colors = greedyVertexColoring(tempGraph);
             int Q = 0;
             int Qmax = 0;
             // Print the obtained vertex colors
-            printGraph(graph);
-            printf("Vertex Colors:\n");
-            for (int i = 0; i < graph->vertices; ++i) {
-                printf("Vertex %d: Color %d\n", colors[i].vertex + 1, colors[i].color);
-            }
+            //printGraph(tempGraph);
+//            printf("Vertex Colors:\n");
+//            for (int i = 0; i < tempGraph->vertices; ++i) {
+//                printf("Vertex %d: Color %d\n", colors[i].vertex + 1, colors[i].color);
+//            }
 
-            graph->rowIDs = (int *) malloc(graph->vertices * sizeof(int));
-            for (int i = 0; i < graph->vertices; ++i) {
-                graph->rowIDs[i] = i; // You can use any unique identifier logic
+            tempGraph->rowIDs = (int *) malloc(tempGraph->vertices * sizeof(int));
+            for (int i = 0; i < tempGraph->vertices; ++i) {
+                tempGraph->rowIDs[i] = i; // You can use any unique identifier logic
             }
             // Call maxClique function
             clock_t start = clock();
-            maxClique(graph, colors, &Q, &Qmax);
+            ;
+            maxClique(tempGraph, colors, &Q, &Qmax);
             clock_t end = clock();
             double time_spent = ((double) (end - start)) / CLOCKS_PER_SEC;
-            printf("Time spent: %f\n", time_spent);
-            printf("Number of Vertices in Clique= %d", Qmax);
+            printf("Maximum Clique Size in Polynomial Algorithm= %d\n", Qmax);
+            printf("Time spent for Polynomial Algorithm: %f", time_spent);
+
             free(colors);
-            freeGraph(graph);
+
             break;
         }
 
-        case 2: {
-
-            Graph *graph = createGraphFromFile(filename1);
-            clock_t start = clock();
-            bruteMaxClique(graph);
-            clock_t end = clock();
-            double time_spent = ((double) (end - start)) / CLOCKS_PER_SEC;
-            printf("time spent %f\n", time_spent);
-            freeGraph(graph);
-            break;
-        }
+//        case 2: {
+//
+//            scanf("%d", &graph_choice);
+//            graph_choice -= 1;
+//            tempGraph = graphs[graph_choice];
+//
+//
+//            break;
+//        }
 
         case 3: {
-
-            Graph *graph1 = createGraphFromFile(filename1);
-            Graph *graph2 = createGraphFromFile(filename2);
-
+            printf("Choose 2 graphs\n");
+            scanf("%d", &graph_choice);
+            graph_choice -= 1;
+            tempGraph = graphs[graph_choice];
+            scanf("%d",&graph_choice);
+            graph_choice -= 1;
+            tempGraph1 = graphs[graph_choice];
 
             //----- Exact solution -----
             clock_t start_time1 = clock();
-            int result1 = graphEditDistance(graph1, graph2);
+            int result1 = graphEditDistance(tempGraph, tempGraph1);
             clock_t end_time1 = clock();
             double cpu_time_used1 = ((double) (end_time1 - start_time1)) / CLOCKS_PER_SEC;
 
             // ----- Polynomial solution -----
             clock_t start_time2 = clock();
-            int result2 = graphEditDistancePolynomialApproximation(graph1, graph2);
+            int result2 = graphEditDistancePolynomialApproximation(tempGraph, tempGraph1);
             clock_t end_time2 = clock();
             double cpu_time_used2 = ((double) (end_time2 - start_time2)) / CLOCKS_PER_SEC;
 
@@ -197,23 +256,18 @@ int main() {
 
             printf("%f \n", cpu_time_used1);
             printf(" %f \n", cpu_time_used2);
+
             break;
         }
 
+
         default:
             printf("Invalid choice\n");
+
     }
 
 
 
-//    printf("Vertices in Maximum Clique: ");
-//    for (int i = 0; i < Qmax; ++i) {
-//        printf("%d ", &cliqueVertices[i] + 1); // Adding 1 to convert from 0-based to 1-based index
-//    }
-
-
-
-   // free(cliqueVertices);
-   getch();
-    return 0;
+    getch();
+    return EXIT_SUCCESS;
 }

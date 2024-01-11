@@ -139,7 +139,7 @@ void maxClique(Graph* graph, VertexColorPair* colors, int *Q, int* Qmax) {
 //       ID = pushToArray(&ID,*Q,graph->rowIDs[maxVertex]);
     // Remove the selected vertex from set R
         removeRowColumn(graph, maxVertex, maxVertex);
-        printGraph(graph);
+//        printGraph(graph);
         if (*Q + maxColor > *Qmax) {
             *Q = *Q + 1 ;
             // Check if R ? ?(p) ? Ø
@@ -153,9 +153,9 @@ void maxClique(Graph* graph, VertexColorPair* colors, int *Q, int* Qmax) {
             if (hasNeighborsInR) {
                 // Obtain a vertex-coloring C' of G(R ? ?(p))
                 VertexColorPair *newColors = greedyVertexColoring(graph);
-                for (int i = 0; i < graph->vertices; ++i) {
-                    printf("Vertex %d: Color %d\n", i + 1, newColors[i].color);
-                }
+//                for (int i = 0; i < graph->vertices; ++i) {
+//                    printf("Vertex %d: Color %d\n", i + 1, newColors[i].color);
+//                }
                 maxClique(graph, newColors, Q, Qmax);
             }
             else if (*Q > *Qmax) {

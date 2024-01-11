@@ -35,7 +35,7 @@ void bruteMaxClique(Graph* graph) {
         findMaxCliqueRec(graph, clique, 1, &maxSize);
     }
 
-    printf("Maximum Clique Size: %d\n", maxSize);
+    printf("Maximum Clique Size in Exponential Algortihm: %d", maxSize);
     printf("\n");
 }
 #endif
