@@ -9,9 +9,27 @@
 #include <conio.h>
 
 const char* filename = "../example graphs/graphs.txt";
-static int NumberOfGraph;
+int NumberOfGraph;
 
 //Malloc
+
+int sizeCalculator(Graph* graph){
+
+    int count = 0;
+
+    for(int i = 0 ; i < graph->vertices;i++){
+        for(int j = 0 ; j < graph->vertices;j++){
+
+            if(graph->adjacencyMatrix[i][j] == 1){
+                count++;
+            }
+
+        }
+    }
+    return (count/2) + graph->vertices;
+}
+
+
 int** allocateMatrix(int**graph,int ver) {
     int** matrix = (int**)malloc(ver * sizeof(int*));
     for (int i = 0; i < ver; ++i) {
@@ -118,9 +136,6 @@ Graph** createGraphFromFile(const char* filename) {
     fclose(file);
 
 
-
-
-
     // Check if the matrix is symmetric
     for(int i=0; i<numGraphs;i++) {
         if (!isSymmetric(graphs[i]->adjacencyMatrix, graphs[i]->vertices)) {
@@ -151,9 +166,14 @@ int main() {
     int cond = 1;
     int choice = 0;
     int graph_choice = 0;
+
     Graph *tempGraph;
     Graph *tempGraph1;
     Graph **graphs = createGraphFromFile(filename);
+    int graphSizes[NumberOfGraph];
+    for(int i = 0 ;i < NumberOfGraph; i++ ){
+        graphSizes[i] = sizeCalculator(graphs[i] );
+    }
     printf("The Graphs are successfully read");
 //    for(int i=0;i<NumberOfGraph;i++) {
 //        printAdjacencyMatrix(graphs[i]->adjacencyMatrix,graphs[i]->vertices);
@@ -171,7 +191,7 @@ int main() {
 
         printf("Choose the graph you would like to test:\n");
         for (int i = 0; i < NumberOfGraph; i++) {
-            printf("%d) The graph with %d vertices\n", i + 1, graphs[i]->vertices);
+            printf("%d) The graph with %d vertices with size of %d \n", i + 1, graphs[i]->vertices,graphSizes[i]);
         }
 
 
@@ -181,7 +201,6 @@ int main() {
             scanf("%d", &graph_choice);
             graph_choice -= 1;
             tempGraph = graphs[graph_choice];
-            printf("GRAPH WITH SIZE %d");
             printGraph(tempGraph);
             if(graph_choice == 7)
                 printf("Brute force algorithm find the maximum clique in around 5 minutes for choosen graph due to its size");
@@ -219,17 +238,7 @@ int main() {
             break;
         }
 
-//        case 2: {
-//
-//            scanf("%d", &graph_choice);
-//            graph_choice -= 1;
-//            tempGraph = graphs[graph_choice];
-//
-//
-//            break;
-//        }
-
-        case 3: {
+        case 2: {
             printf("Choose 2 graphs\n");
             scanf("%d", &graph_choice);
             graph_choice -= 1;
