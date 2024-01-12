@@ -254,20 +254,20 @@ int main() {
 
             break;
         }
-        case 4: {
-          printf("Choose 1 graph\n");
-          scanf("%d", &graph_choice);
-          printf("-------------------- Metric Space ---------------------\n");
-          tempGraph = graphs[graph_choice];
-          // findAllAndPrintResolvingSets(tempGraph);
-          generateSubsets(tempGraph);
-          printf("find all resolving sets\n");
-          findAllAndPrintResolvingSets(tempGraph);
-
-          break;
-
-
-        }
+        // case 4: {
+        //   printf("Choose 1 graph\n");
+        //   scanf("%d", &graph_choice);
+        //   printf("-------------------- Metric Space ---------------------\n");
+        //   tempGraph = graphs[graph_choice];
+        //
+        //   // generateSubsets(tempGraph);
+        //   printf("find all resolving sets\n");
+        //   findAllAndPrintResolvingSets(tempGraph);
+        //
+        //   break;
+        //
+        //
+        // }
 
         default:
             printf("Invalid choice\n");
