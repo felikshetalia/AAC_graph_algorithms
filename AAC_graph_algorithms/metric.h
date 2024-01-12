@@ -100,12 +100,66 @@ int calculateDistance(Graph* graph, int start, int end) {
 
 // Function to check if a set is resolving
 int isResolvingSet(Graph* graph, int* set, int setSize) {
+    int vertices = graph->vertices;
 
+    for (int u = 0; u < vertices; ++u) {
+        for (int v = 0; v < vertices; ++v) {
+            if (u != v) {
+                int distanceU = calculateDistance(graph, u, v);
+                int distanceV = calculateDistance(graph, v, u);
+
+                // If the distances are the same, the set is not resolving
+                if (distanceU == distanceV) {
+                    return 0; // Not resolving
+                }
+            }
+        }
+    }
+
+    return 1; // Resolving
 }
 
 // Function to find and print all resolving sets
 void findAllAndPrintResolvingSets(Graph* graph) {
-  
+    int vertices = graph->vertices;
+
+    // Allocate memory for a set with all vertices
+    int* fullSet = (int*)malloc(vertices * sizeof(int));
+    for (int i = 0; i < vertices; ++i) {
+        fullSet[i] = i;
+    }
+
+    // Iterate through all subsets
+    for (int mask = 0; mask < (1 << vertices); ++mask) {
+        ResolvingSet resolvingSet;
+
+        // Create a subset based on the mask
+        resolvingSet.size = 0;
+        for (int i = 0; i < vertices; ++i) {
+            if (mask & (1 << i)) {
+                ++resolvingSet.size;
+            }
+        }
+        resolvingSet.set = (int*)malloc(resolvingSet.size * sizeof(int));
+
+        int subsetIndex = 0;
+        for (int i = 0; i < vertices; ++i) {
+            if (mask & (1 << i)) {
+                resolvingSet.set[subsetIndex++] = i;
+            }
+        }
+
+        // Check if the subset is a resolving set
+        if (isResolvingSet(graph, resolvingSet.set, resolvingSet.size)) {
+            // Print or store the resolving set
+            printf("Resolving Set: ");
+            printSubset(resolvingSet.set, resolvingSet.size);
+        }
+
+        free(resolvingSet.set);
+    }
+
+    free(fullSet);
 }
 
 // Function to free memory associated with a ResolvingSet

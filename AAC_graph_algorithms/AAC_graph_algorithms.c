@@ -261,6 +261,8 @@ int main() {
           tempGraph = graphs[graph_choice];
           // findAllAndPrintResolvingSets(tempGraph);
           generateSubsets(tempGraph);
+          printf("find all resolving sets\n");
+          findAllAndPrintResolvingSets(tempGraph);
 
           break;
 
