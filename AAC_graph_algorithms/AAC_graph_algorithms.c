@@ -257,26 +257,10 @@ int main() {
         case 4: {
           printf("Choose 1 graph\n");
           scanf("%d", &graph_choice);
-          graph_choice -= 1;
+          printf("-------------------- Metric Space ---------------------\n");
           tempGraph = graphs[graph_choice];
-
-          printf("------------ Find Metric Space --------------\n");
-
-          // Find the minimum resolving set
-          ResolvingSet resolvingSet = findMinResolvingSet(tempGraph);
-
-          if (resolvingSet.size == 0) {
-              printf("No Found Metric Space\n");
-          } else {
-              printf("Metric Space including the following vertices: ");
-              for (int i = 0; i < resolvingSet.size - 1; ++i) {
-                  printf("%d, ", resolvingSet.set[i]);
-              }
-              printf("%d\n", resolvingSet.set[resolvingSet.size - 1]);
-          }
-
-          // Free the memory allocated for the resolving set
-          freeResolvingSet(&resolvingSet);
+          // findAllAndPrintResolvingSets(tempGraph);
+          generateSubsets(tempGraph);
 
           break;
 
