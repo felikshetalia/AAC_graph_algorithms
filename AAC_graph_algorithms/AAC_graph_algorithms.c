@@ -243,14 +243,14 @@ int main() {
             double cpu_time_used2 = ((double) (end_time2 - start_time2)) / CLOCKS_PER_SEC;
 
             printf("------------ Minumun Edit Distance --------------\n");
-            printf("Exact Solution \n");
+            printf("Exact Solution: \n");
             printf("Minimum edit distance is %d \n", result1);
 
-            printf("Approximation Solution \n");
+            printf("Approximation Solution: \n");
             printf("Minimum edit distance is %d \n", result2);
 
-            printf("%f \n", cpu_time_used1);
-            printf(" %f \n", cpu_time_used2);
+            // printf("%f \n", cpu_time_used1);
+            // printf(" %f \n", cpu_time_used2);
 
             break;
         }
