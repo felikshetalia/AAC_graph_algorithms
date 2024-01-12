@@ -44,7 +44,7 @@ VertexDegreePair* degreeSequence(const Graph* graph) {
     return degreeSequence;
 }
 
-// compareDegrees関数の実装
+// compareDegrees
 int compareDegrees(const void* a, const void* b) {
     return ((VertexDegreePair*)a)->degree - ((VertexDegreePair*)b)->degree;
 }

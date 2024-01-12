@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "maxClique.h"
-#include "MSC.h"
-#include "bruteMaxClique.h"
+#include "MCS.h"
 #include <time.h>
 #include "graphEditDistApproximation.h"
 #include "graphEditDist.h"
-#include <conio.h>
+// #include <conio.h>
 
 const char* filename = "../example graphs/graphs.txt";
 int NumberOfGraph;
@@ -150,15 +149,6 @@ Graph** createGraphFromFile(const char* filename) {
 
 
 
-void printAdjacencyMatrix(int** matrix, int length) {
-    printf("Adjacency Matrix:\n");
-    for (int i = 0; i < length; ++i) {
-        for (int j = 0; j < length; ++j) {
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
-}
 
 
 
@@ -180,19 +170,15 @@ int main() {
 //    }
 
 
+    printf("\n");
+    printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)EDIT DISTANCE\n3)Maximum Common Subgraph\n999)EXIT\n ");
 
+    scanf("%d", &choice);
 
-
-
-        printf("\n");
-        printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)METRIC DISTANCE\n999)EXIT\n ");
-
-        scanf("%d", &choice);
-
-        printf("Choose the graph you would like to test:\n");
-        for (int i = 0; i < NumberOfGraph; i++) {
-            printf("%d) The graph with %d vertices with size of %d \n", i + 1, graphs[i]->vertices,graphSizes[i]);
-        }
+    printf("Choose the graph you would like to test:\n");
+    for (int i = 0; i < NumberOfGraph; i++) {
+        printf("%d) The graph with %d vertices with size of %d \n", i + 1, graphs[i]->vertices,graphSizes[i]);
+    }
 
 
     printf("\n");
@@ -205,7 +191,7 @@ int main() {
             if(graph_choice == 7)
                 printf("Brute force algorithm find the maximum clique in around 5 minutes for choosen graph due to its size");
             clock_t start1 = clock();
-                bruteMaxClique(tempGraph);
+            bruteMaxClique(tempGraph);
             clock_t end1 = clock();
             double time_spent1 = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
             printf("Time spent for Exponential Algorithm %f\n\n", time_spent1);
@@ -224,7 +210,7 @@ int main() {
 //            for (int i = 0; i < te1mpGraph->vertices; ++i) {
 //                tempGraph->rowIDs[i] = i; // You can use any unique identifier logic
 //            }
-            // Call maxClique function
+// Call maxClique function
             clock_t start = clock();
             VertexColorPair *colors = greedyVertexColoring(tempGraph);
             maxClique(tempGraph, colors, &Q, &Qmax);
@@ -262,17 +248,30 @@ int main() {
             printf("------------ Minumun Edit Distance --------------\n");
             printf("Exact Solution \n");
             printf("Minimum edit distance is %d \n", result1);
-
+            printf("Run time of the exact solution is: %f \n", cpu_time_used1);
+            printf("\n");
             printf("Approximation Solution \n");
             printf("Minimum edit distance is %d \n", result2);
-
-            printf("%f \n", cpu_time_used1);
-            printf(" %f \n", cpu_time_used2);
+            printf("Run time of approximation solution is: %f \n", cpu_time_used2);
 
             break;
         }
 
+        case 3:{
 
+            printf("Choose 2 graphs\n");
+            scanf("%d", &graph_choice);
+            graph_choice -= 1;
+            tempGraph = graphs[graph_choice];
+            scanf("%d",&graph_choice);
+            graph_choice -= 1;
+            tempGraph1 = graphs[graph_choice];
+
+            MaxCommonSubgraph(tempGraph,tempGraph1);
+
+
+            break;
+        }
         default:
             printf("Invalid choice\n");
 
@@ -280,6 +279,6 @@ int main() {
 
 
 
-    getch();
+    getchar();
     return EXIT_SUCCESS;
 }

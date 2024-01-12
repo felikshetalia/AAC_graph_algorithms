@@ -4,7 +4,7 @@
 
 //TEST FOR PRINTING GRAPH
 void printGraph(const Graph* graph) {
-    printf("Number of Vertices: %d\n", graph->vertices);
+
     printf("Adjacency Matrix:\n");
     for (int i = 0; i < graph->vertices; ++i) {
         for (int j = 0; j < graph->vertices; ++j) {

@@ -5,24 +5,6 @@
 #ifndef GRAPH_EDIT_DIST_H
 #define GRAPH_EDIT_DIST_H
 
-
-
-// "adjacencyMatrixces.h"
-// #ifndef ADJACENCY_MATRIXES_H
-// #define ADJACENCY_MATRIXES_H
-//
-// typedef struct VertexColorPair {
-//     int vertex;
-//     int color;
-// } VertexColorPair;
-//
-// typedef struct Graph {
-//     int vertices;
-//     int** adjacencyMatrix;
-// } Graph;
-//
-// #endif // ADJACENCY_MATRIXES_H
-
 int next_permutation(int *array, int size) {
     // algo for generating permutation
     int i = size - 1;
@@ -79,13 +61,13 @@ int graphEditDistance(const Graph* graph1, const Graph* graph2) {
     int maxNumVertices = (size1 > size2) ? size1 : size2;
     int editDistance = 0;
 
-    printf("------------ INFO: Graph 1 --------------\n");
-    printf("Vertices graph 1: %d \n", size1);
-    printf("Edges graph 1: %d \n", getNumberOfEdges(graph1));
-
-    printf("------------ INFO: Graph 2 --------------\n");
-    printf("Vertices graph 2: %d \n", size2);
-    printf("Edgs graph 2: %d \n", getNumberOfEdges(graph2));
+    // printf("------------ INFO: Graph 1 --------------\n");
+    // printf("Vertices graph 1: %d \n", size1);
+    // printf("Edges graph 1: %d \n", getNumberOfEdges(graph1));
+    //
+    // printf("------------ INFO: Graph 2 --------------\n");
+    // printf("Vertices graph 2: %d \n", size2);
+    // printf("Edgs graph 2: %d \n", getNumberOfEdges(graph2));
 
     // If the number of vertices is different, then the edit distance is the difference between the number of vertices
     editDistance += abs(size1 - size2);
