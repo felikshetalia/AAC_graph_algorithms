@@ -24,7 +24,7 @@ void findMaxCliqueRec(Graph* graph, int* clique, int size, int* maxSize) {
     }
 }
 // Function to find the maximum clique in the graph using brute force
-void bruteMaxClique(Graph* graph) {
+int bruteMaxClique(Graph* graph) {
     int clique[MAX_VERTICES];
     int maxSize = 0;
 
@@ -34,6 +34,7 @@ void bruteMaxClique(Graph* graph) {
         findMaxCliqueRec(graph, clique, 1, &maxSize);
     }
 
-    printf("Maximum Clique Size in Exponential Algortihm: %d", maxSize);
+
     printf("\n");
+    return maxSize;
 }

@@ -4,491 +4,505 @@
         -:    0:Runs:1
         -:    1:#include <stdio.h>
         -:    2:#include <stdlib.h>
-        -:    3:
-        -:    4:typedef struct VertexColorPair {
-        -:    5:    int vertex;
-        -:    6:    int color;
-        -:    7:} VertexColorPair;
-        -:    8:
-        -:    9:typedef struct Graph {
-        -:   10:    int vertices;
-        -:   11:    int** adjacencyMatrix;
-        -:   12:} Graph;
-        -:   13:
-        -:   14://Malloc
-function allocateMatrix called 1 returned 100% blocks executed 100%
-        1:   15:int** allocateMatrix(int rows, int cols) {
-        1:   16:    int** matrix = (int**)malloc(rows * sizeof(int*));
-        6:   17:    for (int i = 0; i < rows; ++i) {
-        1:   17-block  0
-        6:   17-block  1
-branch  0 taken 5
-branch  1 taken 1 (fallthrough)
-        5:   18:        matrix[i] = (int*)malloc(cols * sizeof(int));
-        5:   18-block  0
-        -:   19:    }
-        1:   20:    return matrix;
-        1:   20-block  0
-        -:   21:}
-        -:   22:
-        -:   23://Dealloc
-function freeMatrix called 1 returned 100% blocks executed 75%
-        1:   24:void freeMatrix(int** matrix, int rows) {
-       1*:   25:    for (int i = 0; i < rows; ++i) {
-        1:   25-block  0
-        1:   25-block  1
-branch  0 taken 0
-branch  1 taken 1 (fallthrough)
-    #####:   26:        free(matrix[i]);
-    %%%%%:   26-block  0
+        -:    3:#include "maxClique.h"
+        -:    4:#include "MCS.h"
+        -:    5:#include <time.h>
+        -:    6:#include "graphEditDistApproximation.h"
+        -:    7:#include "graphEditDist.h"
+        -:    8:// #include <conio.h>
+        -:    9:
+        -:   10:const char* filename = "../example graphs/graphs.txt";
+        -:   11:int NumberOfGraph;
+        -:   12:
+        -:   13://Malloc
+        -:   14:
+function sizeCalculator called 8 returned 100% blocks executed 100%
+        8:   15:int sizeCalculator(Graph* graph){
+        -:   16:
+        8:   17:    int count = 0;
+        -:   18:
+      166:   19:    for(int i = 0 ; i < graph->vertices;i++){
+        8:   19-block  0
+      158:   19-block  1
+      166:   19-block  2
+branch  0 taken 158
+branch  1 taken 8 (fallthrough)
+     5610:   20:        for(int j = 0 ; j < graph->vertices;j++){
+      158:   20-block  0
+     5452:   20-block  1
+     5610:   20-block  2
+branch  0 taken 5452
+branch  1 taken 158 (fallthrough)
+        -:   21:
+     5452:   22:            if(graph->adjacencyMatrix[i][j] == 1){
+     5452:   22-block  0
+branch  0 taken 4686 (fallthrough)
+branch  1 taken 766
+     4686:   23:                count++;
+     4686:   23-block  0
+        -:   24:            }
+        -:   25:
+        -:   26:        }
         -:   27:    }
-        1:   28:    free(matrix);
-        1:   29:}
+        8:   28:    return (count/2) + graph->vertices;
+        8:   28-block  0
+        -:   29:}
         -:   30:
-function freeGraph called 1 returned 100% blocks executed 100%
-        1:   31:void freeGraph(Graph* graph) {
-        1:   32:    freeMatrix(graph->adjacencyMatrix, graph->vertices);
-        1:   32-block  0
-call    0 returned 1
-        1:   33:    free(graph);
-        1:   34:}
-        -:   35:
-        -:   36:// This function is checking if the matrix we use is valid.
-function isSymmetric called 1 returned 100% blocks executed 83%
-        1:   37:int isSymmetric(int** matrix, int size) {
-        6:   38:    for (int i = 0; i < size; ++i) {
-        1:   38-block  0
-        5:   38-block  1
-        6:   38-block  2
-branch  0 taken 5
-branch  1 taken 1 (fallthrough)
-        5:   39:        if(matrix[i][i] == 1){
-        5:   39-block  0
-branch  0 taken 0 (fallthrough)
-branch  1 taken 5
-    #####:   40:            return 0; //diagonal elements cannot be 0
-    %%%%%:   40-block  0
-        -:   41:        }
-        -:   42:
-       15:   43:        for (int j = 0; j < i; ++j) {
-        5:   43-block  0
-       10:   43-block  1
-       15:   43-block  2
-branch  0 taken 10
-branch  1 taken 5 (fallthrough)
-       10:   44:            if (matrix[i][j] != matrix[j][i]) {
-       10:   44-block  0
-branch  0 taken 0 (fallthrough)
-branch  1 taken 10
-    #####:   45:                return 0; // Not symmetric (not valid)
-    %%%%%:   45-block  0
-        -:   46:            }
-        -:   47:        }
-        -:   48:    }
-        -:   49:
-        1:   50:    return 1; // Symmetric (valid)
-        1:   50-block  0
-        -:   51:}
-        -:   52:
-function greedyVertexColoring called 2 returned 100% blocks executed 88%
-        2:   53:VertexColorPair* greedyVertexColoring(const Graph* graph) {
-        2:   54:    VertexColorPair* vertexColors = (VertexColorPair*)malloc(graph->vertices * sizeof(VertexColorPair));
-        2:   55:    if (vertexColors == NULL) {
-        2:   55-block  0
-branch  0 taken 0 (fallthrough)
-branch  1 taken 2
-    #####:   56:        fprintf(stderr, "Memory allocation failed\n");
-    %%%%%:   56-block  0
+        -:   31:
+function allocateMatrix called 0 returned 0% blocks executed 0%
+    #####:   32:int** allocateMatrix(int**graph,int ver) {
+    #####:   33:    int** matrix = (int**)malloc(ver * sizeof(int*));
+    #####:   34:    for (int i = 0; i < ver; ++i) {
+    %%%%%:   34-block  0
+    %%%%%:   34-block  1
+branch  0 never executed
+branch  1 never executed
+    #####:   35:        matrix[i] = (int*)malloc(ver * sizeof(int));
+    %%%%%:   35-block  0
+        -:   36:    }
+    #####:   37:    return matrix;
+    %%%%%:   37-block  0
+        -:   38:}
+        -:   39:
+        -:   40://Dealloc
+function freeMatrix called 0 returned 0% blocks executed 0%
+    #####:   41:void freeMatrix(int** matrix, int rows) {
+    #####:   42:    for (int i = 0; i < rows; ++i) {
+    %%%%%:   42-block  0
+    %%%%%:   42-block  1
+branch  0 never executed
+branch  1 never executed
+    #####:   43:        free(matrix[i]);
+    %%%%%:   43-block  0
+        -:   44:    }
+    #####:   45:    free(matrix);
+        -:   46:
+    #####:   47:}
+        -:   48:
+function freeGraph called 0 returned 0% blocks executed 0%
+    #####:   49:void freeGraph(Graph* graph) {
+    #####:   50:    freeMatrix(graph->adjacencyMatrix, graph->vertices);
+    %%%%%:   50-block  0
 call    0 never executed
-call    1 never executed
-    #####:   57:        exit(EXIT_FAILURE);
-call    0 never executed
-        -:   58:    }
-        -:   59:
-        -:   60:    // Initialize all colors as unassigned (-1)
-       11:   61:    for (int i = 0; i < graph->vertices; ++i) {
-        2:   61-block  0
-       11:   61-block  1
-branch  0 taken 9
-branch  1 taken 2 (fallthrough)
-        9:   62:        vertexColors[i].vertex = i;
-        9:   63:        vertexColors[i].color = -1;
-        9:   63-block  0
-        -:   64:    }
-        -:   65:
-        -:   66:    // Assign colors to vertices
-       11:   67:    for (int vertex = 0; vertex < graph->vertices; ++vertex) {
-        2:   67-block  0
-        9:   67-block  1
-       11:   67-block  2
-branch  0 taken 9
-branch  1 taken 2 (fallthrough)
-        -:   68:        // Array to keep track of colors used by neighbors
-        9:   69:        int usedColors[graph->vertices];
-       50:   70:        for (int i = 0; i < graph->vertices; ++i) {
-        9:   70-block  0
-       50:   70-block  1
-branch  0 taken 41
-branch  1 taken 9 (fallthrough)
-       41:   71:            usedColors[i] = 0;
-       41:   71-block  0
-        -:   72:        }
+    #####:   51:    free(graph->rowIDs);
+    #####:   52:    free(graph);
+    #####:   53:}
+        -:   54:
+        -:   55:// This function is checking if the matrix we use is valid.
+function isSymmetric called 8 returned 100% blocks executed 83%
+        8:   56:int isSymmetric(int** matrix, int size) {
+      166:   57:    for (int i = 0; i < size; ++i) {
+        8:   57-block  0
+      158:   57-block  1
+      166:   57-block  2
+branch  0 taken 158
+branch  1 taken 8 (fallthrough)
+      158:   58:        if(matrix[i][i] == 1){
+      158:   58-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 158
+    #####:   59:            return 0; //diagonal elements cannot be 0
+    %%%%%:   59-block  0
+        -:   60:        }
+        -:   61:
+     2805:   62:        for (int j = 0; j < i; ++j) {
+      158:   62-block  0
+     2647:   62-block  1
+     2805:   62-block  2
+branch  0 taken 2647
+branch  1 taken 158 (fallthrough)
+     2647:   63:            if (matrix[i][j] != matrix[j][i]) {
+     2647:   63-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 2647
+    #####:   64:                return 0; // Not symmetric (not valid)
+    %%%%%:   64-block  0
+        -:   65:            }
+        -:   66:        }
+        -:   67:    }
+        -:   68:
+        8:   69:    return 1; // Symmetric (valid)
+        8:   69-block  0
+        -:   70:}
+        -:   71:
+        -:   72:
         -:   73:
-        -:   74:        // Check colors of neighbors and mark them as used
-       50:   75:        for (int neighbor = 0; neighbor < graph->vertices; ++neighbor) {
-        9:   75-block  0
-       41:   75-block  1
-       50:   75-block  2
-branch  0 taken 41
-branch  1 taken 9 (fallthrough)
-       41:   76:            if (graph->adjacencyMatrix[vertex][neighbor] && vertexColors[neighbor].color != -1) {
-       41:   76-block  0
-branch  0 taken 20 (fallthrough)
-branch  1 taken 21
-       20:   76-block  1
-branch  2 taken 10 (fallthrough)
-branch  3 taken 10
-       10:   77:                usedColors[vertexColors[neighbor].color] = 1;
-       10:   77-block  0
-        -:   78:            }
-        -:   79:        }
-        -:   80:
-        -:   81:        // Assign the first available color to the current vertex
-       18:   82:        for (int color = 0; color < graph->vertices; ++color) {
-        9:   82-block  0
-        9:   82-block  1
-       18:   82-block  2
-branch  0 taken 18
-branch  1 taken 0 (fallthrough)
-       18:   83:            if (!usedColors[color]) {
-       18:   83-block  0
-branch  0 taken 9 (fallthrough)
-branch  1 taken 9
-        9:   84:                vertexColors[vertex].color = color;
-        9:   85:                break;
-        9:   85-block  0
-        -:   86:            }
-        -:   87:        }
-        -:   88:    }
-        -:   89:
-        2:   90:    return vertexColors;
-        2:   90-block  0
-        -:   91:}
-        -:   92:
+        -:   74:// Function to read graph from file and create the Graph
+function createGraphFromFile called 1 returned 100% blocks executed 67%
+        1:   75:Graph** createGraphFromFile(const char* filename) {
+        1:   76:    FILE* file = fopen(filename, "r");
+        1:   76-block  0
+call    0 returned 1
+        1:   77:    if (file == NULL) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+    #####:   78:        fprintf(stderr, "Error opening file %s\n", filename);
+    %%%%%:   78-block  0
+call    0 never executed
+call    1 never executed
+    #####:   79:        exit(EXIT_FAILURE);
+call    0 never executed
+        -:   80:    }
+        -:   81:
+        -:   82:    // Read the number of graphs
+        -:   83:    int vertices;
+        -:   84:    int numGraphs;
+        1:   85:    fscanf(file, "%d", &numGraphs);
+        1:   85-block  0
+call    0 returned 1
+        1:   86:    NumberOfGraph = numGraphs;
+        -:   87:    //Apply malloc
+        1:   88:    Graph** graphs = (Graph**)malloc(numGraphs*sizeof(Graph*));
+        1:   89:    if (graphs == NULL) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 1
+    #####:   90:        fprintf(stderr, "Memory allocation failed\n");
+    %%%%%:   90-block  0
+call    0 never executed
+call    1 never executed
+    #####:   91:        exit(EXIT_FAILURE);
+call    0 never executed
+        -:   92:    }
         -:   93:
-        -:   94:
-        -:   95:// Function to read graph from file and create the Graph
-function createGraphFromFile called 1 returned 100% blocks executed 63%
-        1:   96:Graph* createGraphFromFile(const char* filename) {
-        1:   97:    FILE* file = fopen(filename, "r");
-        1:   97-block  0
-call    0 returned 1
-        1:   98:    if (file == NULL) {
-branch  0 taken 0 (fallthrough)
-branch  1 taken 1
-    #####:   99:        fprintf(stderr, "Error opening file %s\n", filename);
-    %%%%%:   99-block  0
-call    0 never executed
-call    1 never executed
-    #####:  100:        exit(EXIT_FAILURE);
-call    0 never executed
-        -:  101:    }
-        -:  102:
-        -:  103:    // Read the number of vertices
-        -:  104:    int vertices;
-        1:  105:    fscanf(file, "%d", &vertices);
-        1:  105-block  0
-call    0 returned 1
-        -:  106:
-        -:  107:    //Apply malloc
-        1:  108:    Graph* graph = (Graph*)malloc(sizeof(Graph));
-        1:  109:    if (graph == NULL) {
-branch  0 taken 0 (fallthrough)
-branch  1 taken 1
-    #####:  110:        fprintf(stderr, "Memory allocation failed\n");
-    %%%%%:  110-block  0
-call    0 never executed
-call    1 never executed
-    #####:  111:        exit(EXIT_FAILURE);
-call    0 never executed
-        -:  112:    }
-        -:  113:
-        1:  114:    graph->vertices = vertices;
-        1:  115:    graph->adjacencyMatrix = allocateMatrix(vertices, vertices);
-        1:  115-block  0
-call    0 returned 1
-        -:  116:
-        -:  117:    // Read the adjacency matrix
-        6:  118:    for (int i = 0; i < vertices; ++i) {
-        5:  118-block  0
-        6:  118-block  1
-branch  0 taken 5
+        9:   94:    for (int graph = 0; graph < numGraphs; ++graph) {
+        1:   94-block  0
+        8:   94-block  1
+        9:   94-block  2
+branch  0 taken 8
 branch  1 taken 1 (fallthrough)
-       30:  119:        for (int j = 0; j < vertices; ++j) {
-        5:  119-block  0
-       30:  119-block  1
-branch  0 taken 25
-branch  1 taken 5 (fallthrough)
-       25:  120:            fscanf(file, "%d", &(graph->adjacencyMatrix[i][j]));
-       25:  120-block  0
-call    0 returned 25
-        -:  121:        }
-        -:  122:    }
-        -:  123:
-        1:  124:    fclose(file);
-        1:  124-block  0
-call    0 returned 1
-        -:  125:
-        -:  126:    // Check if the matrix is symmetric
-        1:  127:    if (!isSymmetric(graph->adjacencyMatrix, vertices)) {
-call    0 returned 1
-branch  1 taken 0 (fallthrough)
-branch  2 taken 1
-    #####:  128:        fprintf(stderr, "Error: The adjacency matrix is not symmetric or contains 1 on diagonal. Not a valid graph.\n");
-    %%%%%:  128-block  0
+        -:   95:
+        8:   96:        graphs[graph] = (Graph*)malloc(sizeof(Graph));
+        8:   97:        if (graphs[graph] == NULL) {
+        8:   97-block  0
+branch  0 taken 0 (fallthrough)
+branch  1 taken 8
+    #####:   98:            fprintf(stderr, "Memory allocation failed\n");
+    %%%%%:   98-block  0
 call    0 never executed
 call    1 never executed
-    #####:  129:        freeGraph(graph);
+    #####:   99:            exit(EXIT_FAILURE);
 call    0 never executed
-    #####:  130:        exit(EXIT_FAILURE);
+        -:  100:        }
+        -:  101:
+        8:  102:        fscanf(file, "%d", &vertices);
+        8:  102-block  0
+call    0 returned 8
+        8:  103:        graphs[graph]->adjacencyMatrix = (int**)malloc(vertices * sizeof(int*));
+        -:  104:
+      166:  105:        for (int i = 0; i < vertices; i++) {
+      166:  105-block  0
+branch  0 taken 158
+branch  1 taken 8 (fallthrough)
+      158:  106:            graphs[graph]->adjacencyMatrix[i] = (int*)malloc(vertices * sizeof(int));
+      158:  106-block  0
+        -:  107:        }
+        -:  108:        // Read adjacency matrix
+      166:  109:        for (int i = 0; i < vertices; ++i) {
+        8:  109-block  0
+      158:  109-block  1
+      166:  109-block  2
+branch  0 taken 158
+branch  1 taken 8 (fallthrough)
+     5610:  110:            for (int j = 0; j < vertices; ++j) {
+      158:  110-block  0
+     5610:  110-block  1
+branch  0 taken 5452
+branch  1 taken 158 (fallthrough)
+     5452:  111:                fscanf(file, "%d", &graphs[graph]->adjacencyMatrix[i][j]);
+     5452:  111-block  0
+call    0 returned 5452
+        -:  112:            }
+        -:  113:        }
+        -:  114:
+        8:  115:        graphs[graph]->vertices = vertices;
+        -:  116:        // Read and discard empty line
+        -:  117:        char buffer[256];
+        8:  118:        fgets(buffer, sizeof(buffer), file);
+        8:  118-block  0
+call    0 returned 8
+        -:  119:        // Initialize row IDs with unique values
+        -:  120:
+        -:  121:        // Initialize row IDs with unique values
+        8:  122:        graphs[graph]->rowIDs = (int*)malloc(vertices * sizeof(int));
+        8:  123:        if (graphs[graph]->rowIDs == NULL) {
+branch  0 taken 0 (fallthrough)
+branch  1 taken 8
+    #####:  124:            fprintf(stderr, "Memory allocation failed\n");
+    %%%%%:  124-block  0
 call    0 never executed
-        -:  131:    }
-        1:  132:    return graph;
-        1:  132-block  0
-        -:  133:}
+call    1 never executed
+    #####:  125:            exit(EXIT_FAILURE);
+call    0 never executed
+        -:  126:        }
+        -:  127:
+      166:  128:        for (int i = 0; i < graphs[graph]->vertices; ++i) {
+        8:  128-block  0
+      166:  128-block  1
+branch  0 taken 158
+branch  1 taken 8 (fallthrough)
+      158:  129:            graphs[graph]->rowIDs[i] = i + 1; // You can use any unique identifier logic
+      158:  129-block  0
+        -:  130:        }
+        -:  131:
+        -:  132:    }
+        -:  133:
         -:  134:
-        -:  135://TEST FOR PRINTING GRAPH
-function printGraph called 6 returned 100% blocks executed 100%
-        6:  136:void printGraph(const Graph* graph) {
-        6:  137:    printf("Number of Vertices: %d\n", graph->vertices);
-        6:  137-block  0
-call    0 returned 6
-        6:  138:    printf("Adjacency Matrix:\n");
-call    0 returned 6
-       21:  139:    for (int i = 0; i < graph->vertices; ++i) {
-       21:  139-block  0
-branch  0 taken 15
-branch  1 taken 6 (fallthrough)
-       70:  140:        for (int j = 0; j < graph->vertices; ++j) {
-       15:  140-block  0
-       70:  140-block  1
-branch  0 taken 55
-branch  1 taken 15 (fallthrough)
-       55:  141:            printf("%d ", graph->adjacencyMatrix[i][j]);
-       55:  141-block  0
-call    0 returned 55
-        -:  142:        }
-       15:  143:        printf("\n");
-       15:  143-block  0
-call    0 returned 15
-        -:  144:    }
-        6:  145:}
-        -:  146:
-        -:  147:
-        -:  148:
-function removeRowColumn called 5 returned 100% blocks executed 100%
-        5:  149:void removeRowColumn(Graph* graph, int targetRow, int targetCol) {
-        -:  150:    // Decrease the number of vertices
-        5:  151:    graph->vertices--;
-        -:  152:
-        -:  153:    // Remove the selected row
-        5:  154:    free(graph->adjacencyMatrix[targetRow]);
-        -:  155:
-        -:  156:    // Move data up for the remaining rows
-        6:  157:    for (int row = targetRow; row < graph->vertices; ++row) {
-        5:  157-block  0
-        6:  157-block  1
-branch  0 taken 1
-branch  1 taken 5 (fallthrough)
-        1:  158:        graph->adjacencyMatrix[row] = graph->adjacencyMatrix[row + 1];
-        1:  158-block  0
-        -:  159:    }
-        -:  160:
-        -:  161:    // Resize each remaining row to have the correct number of columns
-       15:  162:    for (int row = 0; row < graph->vertices; ++row) {
-        5:  162-block  0
-       15:  162-block  1
-branch  0 taken 10
-branch  1 taken 5 (fallthrough)
-       10:  163:        graph->adjacencyMatrix[row] = realloc(graph->adjacencyMatrix[row], sizeof(int) * graph->vertices);
-       10:  163-block  0
-        -:  164:    }
-        -:  165:
-        -:  166:    // Move data to the left for the remaining columns
-        -:  167:
-       15:  168:    for (int row = 0; row < graph->vertices; ++row) {
-        5:  168-block  0
-       10:  168-block  1
-       15:  168-block  2
-branch  0 taken 10
-branch  1 taken 5 (fallthrough)
-       13:  169:        for (int col = targetCol; col < graph->vertices; ++col) {
-       10:  169-block  0
-       13:  169-block  1
-branch  0 taken 3
-branch  1 taken 10 (fallthrough)
-        3:  170:            graph->adjacencyMatrix[row][col] = graph->adjacencyMatrix[row][col + 1];
-        3:  170-block  0
-        -:  171:        }
-        -:  172:    }
-        5:  173:}
-        -:  174:
-        -:  175:
+        1:  135:    fclose(file);
+        1:  135-block  0
+call    0 returned 1
+        -:  136:
+        -:  137:
+        -:  138:    // Check if the matrix is symmetric
+        9:  139:    for(int i=0; i<numGraphs;i++) {
+        8:  139-block  0
+        9:  139-block  1
+branch  0 taken 8
+branch  1 taken 1 (fallthrough)
+        8:  140:        if (!isSymmetric(graphs[i]->adjacencyMatrix, graphs[i]->vertices)) {
+        8:  140-block  0
+call    0 returned 8
+branch  1 taken 0 (fallthrough)
+branch  2 taken 8
+    #####:  141:            fprintf(stderr,
+    %%%%%:  141-block  0
+call    0 never executed
+call    1 never executed
+        -:  142:                    "Error: The adjacency matrix %d is not symmetric or contains 1 on diagonal. Not a valid graph.\n",i+1);
+    #####:  143:            freeGraph(graphs[i]);
+call    0 never executed
+    #####:  144:            exit(EXIT_FAILURE);
+call    0 never executed
+        -:  145:        }
+        -:  146:    }
+        1:  147:    return graphs;
+        1:  147-block  0
+        -:  148:}
+        -:  149:
+        -:  150:
+        -:  151:
 function printAdjacencyMatrix called 0 returned 0% blocks executed 0%
-    #####:  176:void printAdjacencyMatrix(int** matrix, int length) {
-    #####:  177:    printf("Adjacency Matrix:\n");
-    %%%%%:  177-block  0
+    #####:  152:void printAdjacencyMatrix(int** matrix, int length) {
+    #####:  153:    printf("Adjacency Matrix:\n");
+    %%%%%:  153-block  0
 call    0 never executed
-    #####:  178:    for (int i = 0; i < length; ++i) {
-    %%%%%:  178-block  0
+    #####:  154:    for (int i = 0; i < length; ++i) {
+    %%%%%:  154-block  0
 branch  0 never executed
 branch  1 never executed
-    #####:  179:        for (int j = 0; j < length; ++j) {
-    %%%%%:  179-block  0
-    %%%%%:  179-block  1
+    #####:  155:        for (int j = 0; j < length; ++j) {
+    %%%%%:  155-block  0
+    %%%%%:  155-block  1
 branch  0 never executed
 branch  1 never executed
-    #####:  180:            printf("%d ", matrix[i][j]);
-    %%%%%:  180-block  0
+    #####:  156:            printf("%d ", matrix[i][j]);
+    %%%%%:  156-block  0
 call    0 never executed
-        -:  181:        }
-    #####:  182:        printf("\n");
-    %%%%%:  182-block  0
+        -:  157:        }
+    #####:  158:        printf("\n");
+    %%%%%:  158-block  0
 call    0 never executed
-        -:  183:    }
-    #####:  184:}
-        -:  185:
-function maxClique called 2 returned 100% blocks executed 96%
-        2:  186:void maxClique(Graph* graph, VertexColorPair* colors, int* Q, int* Qmax) {
-        2:  187:    int maxVertex = -1;
-        -:  188:
-        7:  189:    while (graph->vertices > 0) {
-        2:  189-block  0
-        7:  189-block  1
-branch  0 taken 5
-branch  1 taken 2 (fallthrough)
-        5:  190:        int maxColor = -1;
+        -:  159:    }
+    #####:  160:}
+        -:  161:
+        -:  162:
+        -:  163:
+function main called 1 returned 0% blocks executed 17%
+        1:  164:int main() {
+        1:  165:    int cond = 1;
+        1:  166:    int choice = 0;
+        1:  167:    int graph_choice = 0;
+        -:  168:
+        -:  169:    Graph *tempGraph;
+        -:  170:    Graph *tempGraph1;
+        1:  171:    Graph **graphs = createGraphFromFile(filename);
+        1:  171-block  0
+call    0 returned 1
+        1:  172:    int graphSizes[NumberOfGraph];
+        9:  173:    for(int i = 0 ;i < NumberOfGraph; i++ ){
+        9:  173-block  0
+branch  0 taken 8
+branch  1 taken 1 (fallthrough)
+        8:  174:        graphSizes[i] = sizeCalculator(graphs[i] );
+        8:  174-block  0
+call    0 returned 8
+        -:  175:    }
+        1:  176:    printf("The Graphs are successfully read");
+        1:  176-block  0
+call    0 returned 1
+        -:  177://    for(int i=0;i<NumberOfGraph;i++) {
+        -:  178://        printAdjacencyMatrix(graphs[i]->adjacencyMatrix,graphs[i]->vertices);
+        -:  179://    }
+        -:  180:
+        -:  181:
+        1:  182:    printf("\n");
+call    0 returned 1
+        1:  183:    printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)EDIT DISTANCE\n3)Maximum Common Subgraph\n999)EXIT\n ");
+call    0 returned 1
+        -:  184:
+        1:  185:    scanf("%d", &choice);
+call    0 returned 0
+        -:  186:
+    #####:  187:    printf("Choose the graph you would like to test:\n");
+call    0 never executed
+    #####:  188:    for (int i = 0; i < NumberOfGraph; i++) {
+    %%%%%:  188-block  0
+branch  0 never executed
+branch  1 never executed
+    #####:  189:        printf("%d) The graph with %d vertices with size of %d \n", i + 1, graphs[i]->vertices,graphSizes[i]);
+    %%%%%:  189-block  0
+call    0 never executed
+        -:  190:    }
         -:  191:
-        -:  192:        // Choose a vertex p with a maximum color C(p) from set R
-       20:  193:        for (int i = 0; i < graph->vertices; ++i) {
-        5:  193-block  0
-       15:  193-block  1
-       20:  193-block  2
-branch  0 taken 15
-branch  1 taken 5 (fallthrough)
-       15:  194:            if (colors[i].color > maxColor) {
-       15:  194-block  0
-branch  0 taken 13 (fallthrough)
-branch  1 taken 2
-       13:  195:                maxColor = colors[i].color;
-       13:  196:                maxVertex = i;
-       13:  196-block  0
-        -:  197:            }
-        -:  198:        }
-        -:  199:
-        -:  200:        // Remove the selected vertex p from set R
-        5:  201:        removeRowColumn(graph, maxVertex, maxVertex);
-        5:  201-block  0
-call    0 returned 5
-        5:  202:        printGraph(graph);
-call    0 returned 5
-        -:  203:
-        5:  204:        if (*Q + maxVertex > *Qmax) {
-branch  0 taken 2 (fallthrough)
-branch  1 taken 3
-        2:  205:            *Q++;
-        -:  206:            // Check if R ? ?(p) ? Ø
-        2:  207:            int hasNeighborsInR = 0;
-        5:  208:            for (int i = 0; i < graph->vertices; ++i) {
-        2:  208-block  0
-        3:  208-block  1
-        5:  208-block  2
-branch  0 taken 4
-branch  1 taken 1 (fallthrough)
-        4:  209:                if (graph->adjacencyMatrix[maxVertex][i]) {
-        4:  209-block  0
-branch  0 taken 1 (fallthrough)
-branch  1 taken 3
-        1:  210:                    hasNeighborsInR = 1;
-        1:  211:                    break;
-        1:  211-block  0
-        -:  212:                }
-        -:  213:            }
-        -:  214:
-        2:  215:            if (hasNeighborsInR) {
-        2:  215-block  0
-branch  0 taken 1 (fallthrough)
-branch  1 taken 1
-        -:  216:                // Obtain a vertex-coloring C' of G(R ? ?(p))
-        1:  217:                VertexColorPair *newColors = greedyVertexColoring(graph);
-        1:  217-block  0
-call    0 returned 1
-        5:  218:                for (int i = 0; i < graph->vertices; ++i) {
-        5:  218-block  0
-branch  0 taken 4
-branch  1 taken 1 (fallthrough)
-        4:  219:                    printf("Vertex %d: Color %d\n", colors[i].vertex + 1, colors[i].color);
-        4:  219-block  0
-call    0 returned 4
-        -:  220:                }
-        -:  221:                // Recursive call with C'
-        1:  222:                maxClique(graph, newColors, &Q, &Qmax);
-        1:  222-block  0
-call    0 returned 1
-        -:  223:
-        -:  224:                // Free the memory for C'
-        1:  225:                free(newColors);
-        1:  226:            } else if (*Q > *Qmax) {
-        1:  226-block  0
-branch  0 taken 1 (fallthrough)
-branch  1 taken 0
-        1:  227:                Qmax = Q;
-        1:  228:                Q--;
-        1:  228-block  0
-        -:  229:
-        -:  230:            }
-        -:  231:            else {
-    #####:  232:                return;
-    %%%%%:  232-block  0
-        -:  233:            }
+        -:  192:
+    #####:  193:    printf("\n");
+    %%%%%:  193-block  0
+call    0 never executed
+    #####:  194:    switch (choice) {
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+    #####:  195:        case 1: {
+    #####:  196:            scanf("%d", &graph_choice);
+    %%%%%:  196-block  0
+call    0 never executed
+    #####:  197:            graph_choice -= 1;
+    #####:  198:            tempGraph = graphs[graph_choice];
+    #####:  199:            printGraph(tempGraph);
+call    0 never executed
+    #####:  200:            if(graph_choice == 7)
+branch  0 never executed
+branch  1 never executed
+    #####:  201:                printf("Brute force algorithm find the maximum clique in around 5 minutes for choosen graph due to its size");
+    %%%%%:  201-block  0
+call    0 never executed
+    #####:  202:            clock_t start1 = clock();
+    %%%%%:  202-block  0
+call    0 never executed
+    #####:  203:            bruteMaxClique(tempGraph);
+call    0 never executed
+    #####:  204:            clock_t end1 = clock();
+call    0 never executed
+    #####:  205:            double time_spent1 = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
+    #####:  206:            printf("Time spent for Exponential Algorithm %f\n\n", time_spent1);
+call    0 never executed
+    #####:  207:            int Q = 0;
+    #####:  208:            int Qmax = 0;
+        -:  209:
+        -:  210:
+        -:  211:            // Print the obtained vertex colors
+        -:  212:            //printGraph(tempGraph);
+        -:  213://            printf("Vertex Colors:\n");
+        -:  214://            for (int i = 0; i < tempGraph->vertices; ++i) {
+        -:  215://                printf("Vertex %d: Color %d\n", colors[i].vertex + 1, colors[i].color);
+        -:  216://            }
+        -:  217:
+        -:  218://            tempGraph->rowIDs = (int *) malloc(tempGraph->vertices * sizeof(int));
+        -:  219://            for (int i = 0; i < te1mpGraph->vertices; ++i) {
+        -:  220://                tempGraph->rowIDs[i] = i; // You can use any unique identifier logic
+        -:  221://            }
+        -:  222:// Call maxClique function
+    #####:  223:            clock_t start = clock();
+call    0 never executed
+    #####:  224:            VertexColorPair *colors = greedyVertexColoring(tempGraph);
+call    0 never executed
+    #####:  225:            maxClique(tempGraph, colors, &Q, &Qmax);
+call    0 never executed
+    #####:  226:            clock_t end = clock();
+call    0 never executed
+    #####:  227:            float time_spent = ((float) (end - start)) / CLOCKS_PER_SEC;
+    #####:  228:            printf("Maximum Clique Size in Polynomial Algorithm= %d\n", Qmax);
+call    0 never executed
+    #####:  229:            printf("Time spent for Polynomial Algorithm: %f", time_spent);
+call    0 never executed
+        -:  230:
+    #####:  231:            free(colors);
+        -:  232:
+    #####:  233:            break;
         -:  234:        }
-        -:  235:    }
-        -:  236:}
-        -:  237:
-function main called 1 returned 100% blocks executed 100%
-        1:  238:int main() {
-        1:  239:    const char* filename = "../example graphs/graph1.txt";
-        -:  240:
-        1:  241:    Graph* graph = createGraphFromFile(filename);
-        1:  241-block  0
-call    0 returned 1
-        1:  242:    VertexColorPair *colors = greedyVertexColoring(graph);
-call    0 returned 1
-        1:  243:    int Q =0;
-        1:  244:    int Qmax = 0;
-        -:  245:    // Print the obtained vertex colors
-        1:  246:    printGraph(graph);
-call    0 returned 1
-        1:  247:    printf("Vertex Colors:\n");
-call    0 returned 1
-        6:  248:    for (int i = 0; i < graph->vertices; ++i) {
-        6:  248-block  0
-branch  0 taken 5
-branch  1 taken 1 (fallthrough)
-        5:  249:        printf("Vertex %d: Color %d\n", colors[i].vertex+1, colors[i].color);
-        5:  249-block  0
-call    0 returned 5
-        -:  250:    }
-        -:  251:
-        -:  252:    // Call maxClique function
-        1:  253:    maxClique(graph, colors, &Q, &Qmax);
-        1:  253-block  0
-call    0 returned 1
-        1:  254:    printf("%d",Qmax);
-call    0 returned 1
-        -:  255:
-        1:  256:    free(colors);
-        1:  257:    freeGraph(graph);
-call    0 returned 1
-        1:  258:    return 0;
-        -:  259:}
+        -:  235:
+    #####:  236:        case 2: {
+    #####:  237:            printf("Choose 2 graphs\n");
+    %%%%%:  237-block  0
+call    0 never executed
+    #####:  238:            scanf("%d", &graph_choice);
+call    0 never executed
+    #####:  239:            graph_choice -= 1;
+    #####:  240:            tempGraph = graphs[graph_choice];
+    #####:  241:            scanf("%d",&graph_choice);
+call    0 never executed
+    #####:  242:            graph_choice -= 1;
+    #####:  243:            tempGraph1 = graphs[graph_choice];
+        -:  244:
+        -:  245:            //----- Exact solution -----
+    #####:  246:            clock_t start_time1 = clock();
+call    0 never executed
+    #####:  247:            int result1 = graphEditDistance(tempGraph, tempGraph1);
+call    0 never executed
+    #####:  248:            clock_t end_time1 = clock();
+call    0 never executed
+    #####:  249:            double cpu_time_used1 = ((double) (end_time1 - start_time1)) / CLOCKS_PER_SEC;
+        -:  250:
+        -:  251:            // ----- Polynomial solution -----
+    #####:  252:            clock_t start_time2 = clock();
+call    0 never executed
+    #####:  253:            int result2 = graphEditDistancePolynomialApproximation(tempGraph, tempGraph1);
+call    0 never executed
+    #####:  254:            clock_t end_time2 = clock();
+call    0 never executed
+    #####:  255:            double cpu_time_used2 = ((double) (end_time2 - start_time2)) / CLOCKS_PER_SEC;
+        -:  256:
+    #####:  257:            printf("------------ Minumun Edit Distance --------------\n");
+call    0 never executed
+    #####:  258:            printf("Exact Solution \n");
+call    0 never executed
+    #####:  259:            printf("Minimum edit distance is %d \n", result1);
+call    0 never executed
+    #####:  260:            printf("Run time of the exact solution is: %f \n", cpu_time_used1);
+call    0 never executed
+    #####:  261:            printf("\n");
+call    0 never executed
+    #####:  262:            printf("Approximation Solution \n");
+call    0 never executed
+    #####:  263:            printf("Minimum edit distance is %d \n", result2);
+call    0 never executed
+    #####:  264:            printf("Run time of approximation solution is: %f \n", cpu_time_used2);
+call    0 never executed
+        -:  265:
+    #####:  266:            break;
+        -:  267:        }
+        -:  268:
+    #####:  269:        case 3:{
+        -:  270:
+    #####:  271:            printf("Choose 2 graphs\n");
+    %%%%%:  271-block  0
+call    0 never executed
+    #####:  272:            scanf("%d", &graph_choice);
+call    0 never executed
+    #####:  273:            graph_choice -= 1;
+    #####:  274:            tempGraph = graphs[graph_choice];
+    #####:  275:            scanf("%d",&graph_choice);
+call    0 never executed
+    #####:  276:            graph_choice -= 1;
+    #####:  277:            tempGraph1 = graphs[graph_choice];
+        -:  278:
+    #####:  279:            MaxCommonSubgraph(tempGraph,tempGraph1);
+call    0 never executed
+        -:  280:
+        -:  281:
+    #####:  282:            break;
+        -:  283:        }
+    #####:  284:        default:
+    #####:  285:            printf("Invalid choice\n");
+    %%%%%:  285-block  0
+call    0 never executed
+        -:  286:
+        -:  287:    }
+        -:  288:
+        -:  289:
+        -:  290:
+    #####:  291:    getchar();
+    %%%%%:  291-block  0
+call    0 never executed
+    #####:  292:    return EXIT_SUCCESS;
+        -:  293:}

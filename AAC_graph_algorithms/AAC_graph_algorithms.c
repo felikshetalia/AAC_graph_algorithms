@@ -171,7 +171,7 @@ int main() {
 
 
     printf("\n");
-    printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)EDIT DISTANCE\n3)Maximum Common Subgraph\n999)EXIT\n ");
+    printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)EDIT DISTANCE\n3)MAXIMUM COMMON SUBGRAPH\n999)EXIT\n ");
 
     scanf("%d", &choice);
 
@@ -191,9 +191,10 @@ int main() {
             if(graph_choice == 7)
                 printf("Brute force algorithm find the maximum clique in around 5 minutes for choosen graph due to its size");
             clock_t start1 = clock();
-            bruteMaxClique(tempGraph);
+            int maxs = bruteMaxClique(tempGraph);
             clock_t end1 = clock();
             double time_spent1 = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
+            printf("Maximum Clique Size in Exponential Algorithm: %d\n", maxs);
             printf("Time spent for Exponential Algorithm %f\n\n", time_spent1);
             int Q = 0;
             int Qmax = 0;
@@ -259,6 +260,14 @@ int main() {
 
         case 3:{
 
+            Graph *tempGraph2;
+            tempGraph2  = (Graph*)malloc(sizeof(Graph));
+            tempGraph2->adjacencyMatrix = (int**)malloc(tempGraph->vertices*tempGraph1->vertices * sizeof(int*));
+            for (int i = 0; i < tempGraph->vertices*tempGraph1->vertices; i++) {
+                tempGraph2->adjacencyMatrix[i] = (int*)malloc(tempGraph->vertices*tempGraph1->vertices * sizeof(int));
+            }
+
+
             printf("Choose 2 graphs\n");
             scanf("%d", &graph_choice);
             graph_choice -= 1;
@@ -266,10 +275,23 @@ int main() {
             scanf("%d",&graph_choice);
             graph_choice -= 1;
             tempGraph1 = graphs[graph_choice];
+            tempGraph2 = MaxCommonSubgraph(tempGraph,tempGraph1);
 
-            MaxCommonSubgraph(tempGraph,tempGraph1);
-
-
+            clock_t start1 = clock();
+             int bruteClique = bruteMaxClique(tempGraph2);
+            clock_t end1 = clock();
+            double cpu_time_used1 = ((double) (end1 - start1)) / CLOCKS_PER_SEC;
+            printf("Size of Maximum Common Subgraph in Exponential algorithm= %d\n", bruteClique);
+            printf("Time spent for Polynomial Algorithm: %f\n\n", cpu_time_used1);
+            int Q = 0;
+            int Qmax = 0;
+            clock_t start2 = clock();
+            VertexColorPair *colors = greedyVertexColoring(tempGraph);
+            maxClique(tempGraph, colors, &Q, &Qmax);
+            clock_t end2 = clock();
+            double cpu_time_used2 = ((double) (end2 - start2)) / CLOCKS_PER_SEC;
+            printf("Size of Maximum Common Subgraph in Polynomial algorithm= %d\n", Qmax);
+            printf("Time spent for Polynomial Algorithm: %f", cpu_time_used2);
             break;
         }
         default:

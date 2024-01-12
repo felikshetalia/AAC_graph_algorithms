@@ -62,7 +62,7 @@ void modularProduct(const Graph *g1, const Graph *g2, Graph *g3) {
     }
 }
 
-void MaxCommonSubgraph(Graph *g1, Graph *g2) {
+Graph* MaxCommonSubgraph(Graph *g1, Graph *g2) {
     Graph *res = (Graph *)malloc(sizeof(Graph));
     init_graph(res, g1->vertices * g2->vertices);
 
@@ -76,12 +76,7 @@ void MaxCommonSubgraph(Graph *g1, Graph *g2) {
     printAdjacencyMatrix(res->adjacencyMatrix, res->vertices);
 
 
-    int Q = 0;
-    int i = 0;
-    VertexColorPair *colors = greedyVertexColoring(res);
-    maxClique(res, colors, &Q, &i);
-    printf("%d",i);
-
 //    bruteMaxClique(res);
     // Do not free res here
+    return res;
 }

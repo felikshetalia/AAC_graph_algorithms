@@ -302,27 +302,31 @@
         -:  298:
         -:  299:__mingw_ovr
         -:  300:__attribute__((__format__ (gnu_scanf, 1, 2))) __MINGW_ATTRIB_NONNULL(1)
-        -:  301:int scanf(const char *__format, ...)
+function scanf called 1 returned 0% blocks executed 75%
+        1:  301:int scanf(const char *__format, ...)
         -:  302:{
         -:  303:  int __retval;
-        -:  304:  __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
-        -:  305:  __retval = __mingw_vfscanf( stdin, __format, __local_argv );
-        -:  306:  __builtin_va_end( __local_argv );
-        -:  307:  return __retval;
+        1:  304:  __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
+        1:  305:  __retval = __mingw_vfscanf( stdin, __format, __local_argv );
+        1:  305-block  0
+call    0 returned 1
+call    1 returned 0
+    #####:  306:  __builtin_va_end( __local_argv );
+    #####:  307:  return __retval;
         -:  308:}
         -:  309:
         -:  310:__mingw_ovr
         -:  311:__attribute__((__format__ (gnu_scanf, 2, 3))) __MINGW_ATTRIB_NONNULL(2)
-function fscanf called 26 returned 100% blocks executed 100%
-       26:  312:int fscanf(FILE *__stream, const char *__format, ...)
+function fscanf called 5461 returned 100% blocks executed 100%
+     5461:  312:int fscanf(FILE *__stream, const char *__format, ...)
         -:  313:{
         -:  314:  int __retval;
-       26:  315:  __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
-       26:  316:  __retval = __mingw_vfscanf( __stream, __format, __local_argv );
-       26:  316-block  0
-call    0 returned 26
-       26:  317:  __builtin_va_end( __local_argv );
-       26:  318:  return __retval;
+     5461:  315:  __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
+     5461:  316:  __retval = __mingw_vfscanf( __stream, __format, __local_argv );
+     5461:  316-block  0
+call    0 returned 5461
+     5461:  317:  __builtin_va_end( __local_argv );
+     5461:  318:  return __retval;
         -:  319:}
         -:  320:
         -:  321:#ifndef __NO_ISOCEXT  /* externs in libmingwex.a */
@@ -375,17 +379,17 @@ call    0 never executed
         -:  365:
         -:  366:__mingw_ovr
         -:  367:__attribute__((__format__ (gnu_printf, 1, 2))) __MINGW_ATTRIB_NONNULL(1)
-function printf called 93 returned 100% blocks executed 100%
-       93:  368:int printf (const char *__format, ...)
+function printf called 3 returned 100% blocks executed 100%
+        3:  368:int printf (const char *__format, ...)
         -:  369:{
         -:  370:  int __retval;
-       93:  371:  __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
-       93:  372:  __retval = __mingw_vfprintf( stdout, __format, __local_argv );
-       93:  372-block  0
-call    0 returned 93
-call    1 returned 93
-       93:  373:  __builtin_va_end( __local_argv );
-       93:  374:  return __retval;
+        3:  371:  __builtin_va_list __local_argv; __builtin_va_start( __local_argv, __format );
+        3:  372:  __retval = __mingw_vfprintf( stdout, __format, __local_argv );
+        3:  372-block  0
+call    0 returned 3
+call    1 returned 3
+        3:  373:  __builtin_va_end( __local_argv );
+        3:  374:  return __retval;
         -:  375:}
         -:  376:
         -:  377:#if __MINGW_FORTIFY_VA_ARG
