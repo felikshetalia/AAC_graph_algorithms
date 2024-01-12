@@ -1,4 +1,5 @@
-
+#ifndef ADJACENCY_MATRIXCES_H
+#define ADJACENCY_MATRIXCES_H
 typedef struct VertexColorPair {
     int vertex;
     int color;
@@ -14,3 +15,4 @@ typedef struct VertexDegreePair {
     int vertex;
     int degree;
 } VertexDegreePair;
+#endif

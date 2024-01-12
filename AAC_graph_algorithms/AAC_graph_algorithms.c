@@ -1,35 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "maxClique.h"
-#include "MSC.h"
+#include "MCS.h"
 #include "bruteMaxClique.h"
 #include <time.h>
 #include "graphEditDistApproximation.h"
 #include "graphEditDist.h"
 #include <conio.h>
+#include "metric.h"
 
 const char* filename = "../example graphs/graphs.txt";
-int NumberOfGraph;
+static int NumberOfGraph;
 
 //Malloc
-
-int sizeCalculator(Graph* graph){
-
-    int count = 0;
-
-    for(int i = 0 ; i < graph->vertices;i++){
-        for(int j = 0 ; j < graph->vertices;j++){
-
-            if(graph->adjacencyMatrix[i][j] == 1){
-                count++;
-            }
-
-        }
-    }
-    return (count/2) + graph->vertices;
-}
-
-
 int** allocateMatrix(int**graph,int ver) {
     int** matrix = (int**)malloc(ver * sizeof(int*));
     for (int i = 0; i < ver; ++i) {
@@ -136,6 +119,9 @@ Graph** createGraphFromFile(const char* filename) {
     fclose(file);
 
 
+
+
+
     // Check if the matrix is symmetric
     for(int i=0; i<numGraphs;i++) {
         if (!isSymmetric(graphs[i]->adjacencyMatrix, graphs[i]->vertices)) {
@@ -166,14 +152,9 @@ int main() {
     int cond = 1;
     int choice = 0;
     int graph_choice = 0;
-
     Graph *tempGraph;
     Graph *tempGraph1;
     Graph **graphs = createGraphFromFile(filename);
-    int graphSizes[NumberOfGraph];
-    for(int i = 0 ;i < NumberOfGraph; i++ ){
-        graphSizes[i] = sizeCalculator(graphs[i] );
-    }
     printf("The Graphs are successfully read");
 //    for(int i=0;i<NumberOfGraph;i++) {
 //        printAdjacencyMatrix(graphs[i]->adjacencyMatrix,graphs[i]->vertices);
@@ -185,13 +166,13 @@ int main() {
 
 
         printf("\n");
-        printf("Enter 1 or 2  \n1)CLIQUE ALGORITHMS \n2)METRIC DISTANCE\n999)EXIT\n ");
+        printf("Enter the number of the following:  \n1)CLIQUE ALGORITHMS \n2)METRIC DISTANCE\n3)METRIC SPACE\n4)MAXIMUM COMMON SUBGRAPH\n999)EXIT\n ");
 
         scanf("%d", &choice);
 
         printf("Choose the graph you would like to test:\n");
         for (int i = 0; i < NumberOfGraph; i++) {
-            printf("%d) The graph with %d vertices with size of %d \n", i + 1, graphs[i]->vertices,graphSizes[i]);
+            printf("%d) The graph with %d vertices\n", i + 1, graphs[i]->vertices);
         }
 
 
@@ -201,6 +182,7 @@ int main() {
             scanf("%d", &graph_choice);
             graph_choice -= 1;
             tempGraph = graphs[graph_choice];
+            printf("GRAPH WITH SIZE %d");
             printGraph(tempGraph);
             if(graph_choice == 7)
                 printf("Brute force algorithm find the maximum clique in around 5 minutes for choosen graph due to its size");
@@ -238,6 +220,16 @@ int main() {
             break;
         }
 
+//        case 2: {
+//
+//            scanf("%d", &graph_choice);
+//            graph_choice -= 1;
+//            tempGraph = graphs[graph_choice];
+//
+//
+//            break;
+//        }
+
         case 2: {
             printf("Choose 2 graphs\n");
             scanf("%d", &graph_choice);
@@ -269,6 +261,50 @@ int main() {
             printf("%f \n", cpu_time_used1);
             printf(" %f \n", cpu_time_used2);
 
+            break;
+        }
+        case 3: {
+            printf("Choose 1 graph\n");
+          scanf("%d", &graph_choice);
+          graph_choice -= 1;
+          tempGraph = graphs[graph_choice];
+
+          printf("------------ Find Metric Space --------------\n");
+
+          // Find the minimum resolving set
+          ResolvingSet resolvingSet = findMinResolvingSet(tempGraph);
+
+          if (resolvingSet.size == 0) {
+              printf("No Found Metric Space\n");
+          } else {
+              printf("Metric Space including the following vertices: ");
+              for (int i = 0; i < resolvingSet.size - 1; ++i) {
+                  printf("%d, ", resolvingSet.set[i]);
+              }
+              printf("%d\n", resolvingSet.set[resolvingSet.size - 1]);
+          }
+
+          // Free the memory allocated for the resolving set
+          freeResolvingSet(&resolvingSet);
+
+          break;
+        }
+        case 4: {
+            printf("Choose 2 graphs\n");
+            scanf("%d", &graph_choice);
+            graph_choice -= 1;
+            tempGraph = graphs[graph_choice];
+            scanf("%d",&graph_choice);
+            graph_choice -= 1;
+            tempGraph1 = graphs[graph_choice];
+
+            printf("------------ Maximum Common Subgraph --------------\n");
+            clock_t start = clock();
+            MaxCommonSubgraph(tempGraph,tempGraph1);
+            clock_t end = clock();
+            float time_spent = ((float) (end - start)) / CLOCKS_PER_SEC;
+
+            printf("Time spent for Polynomial Algorithm: %f", time_spent);
             break;
         }
 
